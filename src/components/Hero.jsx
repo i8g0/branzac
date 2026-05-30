@@ -117,7 +117,7 @@ export default function Hero() {
 
       <div
         className={`hero-content static-content ${loaded ? 'loaded' : ''}`}
-        style={{ transform: `translate(-50%, calc(-50% + ${contentY}px))` }}
+        style={{ transform: `translate(-50%, calc(-50% + 40px + ${contentY}px))` }}
       >
         <p className="hero-welcome">{welcomeText}</p>
 
