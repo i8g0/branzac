@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react'
 import { supabase } from '../lib/supabase'
 
-const DEFAULT_LOGO = '/images/logo-bg.png'
+const DEFAULT_LOGO = ''
 const CHANNEL_NAME = 'site-logo-shared'
 
 let logoUrl = DEFAULT_LOGO

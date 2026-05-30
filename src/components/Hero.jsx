@@ -9,7 +9,7 @@ import { springSoft } from '../lib/motion'
 
 const DEFAULT_SLIDE = {
   id: 'default',
-  image: '/images/hero-bg.png',
+  image: '',
   name: 'حيث تلتقي القهوة المختصة بالأجواء الاستثنائية',
 }
 
@@ -122,15 +122,17 @@ export default function Hero() {
         <p className="hero-welcome">{welcomeText}</p>
 
         <div className="hero-logo">
-          <img
-            src={globalLogo}
-            alt="BRANZAG | برانزاك"
-            className="hero-logo-img"
-            width={290}
-            height={290}
-            decoding="async"
-            fetchpriority="high"
-          />
+          {globalLogo && (
+            <img
+              src={globalLogo}
+              alt="BRANZAG | برانزاك"
+              className="hero-logo-img"
+              width={290}
+              height={290}
+              decoding="async"
+              fetchpriority="high"
+            />
+          )}
         </div>
 
         <AnimatePresence mode="wait">
