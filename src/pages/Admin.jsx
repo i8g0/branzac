@@ -195,11 +195,10 @@ export default function Admin() {
     }
   }
 
-  const getTimeAgo = (d) => {
-    const s = Math.floor((Date.now() - new Date(d).getTime()) / 1000)
-    if (s < 60) return `${s} ثانية`
-    if (s < 3600) return `${Math.floor(s/60)} دقيقة`
-    return `${Math.floor(s/3600)} ساعة`
+  const deleteOrder = async (id) => {
+    if (confirm('حذف هذا الطلب؟')) {
+      await supabase.from('orders').delete().eq('id', id)
+    }
   }
 
   const activeOrders = orders.filter(o => o.status !== 'done')
@@ -399,7 +398,6 @@ export default function Admin() {
                   colOrders={colOrders}
                   updateStatus={updateStatus}
                   deleteOrder={deleteOrder}
-                  getTimeAgo={getTimeAgo}
                 />
               )
             })}
@@ -417,7 +415,6 @@ export default function Admin() {
                 config={STATUS_CONFIG[activeDragOrder.status]}
                 updateStatus={updateStatus}
                 deleteOrder={deleteOrder}
-                getTimeAgo={getTimeAgo}
                 isOverlay={true}
               />
             ) : null}
@@ -428,7 +425,9 @@ export default function Admin() {
   )
 }
 
-function DroppableColumn({ id, status, config, colOrders, updateStatus, deleteOrder, getTimeAgo }) {
+}
+
+function DroppableColumn({ id, status, config, colOrders, updateStatus, deleteOrder }) {
   const { setNodeRef, isOver } = useDroppable({ id })
 
   return (
@@ -449,7 +448,6 @@ function DroppableColumn({ id, status, config, colOrders, updateStatus, deleteOr
               config={config}
               updateStatus={updateStatus}
               deleteOrder={deleteOrder}
-              getTimeAgo={getTimeAgo}
             />
           ))
         )}
@@ -458,7 +456,7 @@ function DroppableColumn({ id, status, config, colOrders, updateStatus, deleteOr
   )
 }
 
-function DraggableOrderCard({ order, status, config, updateStatus, deleteOrder, getTimeAgo, isOverlay = false }) {
+function DraggableOrderCard({ order, status, config, updateStatus, deleteOrder, isOverlay = false }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: order.id,
     data: { order, status }
@@ -486,7 +484,7 @@ function DraggableOrderCard({ order, status, config, updateStatus, deleteOrder, 
     >
       <div className="admin-card-top">
         <span className="admin-table-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:'inline',verticalAlign:'middle',marginLeft:'4px'}} aria-hidden="true"><rect x="3" y="3" width="18" height="12" rx="2"/><line x1="7" y1="15" x2="7" y2="21"/><line x1="17" y1="15" x2="17" y2="21"/></svg> طاولة {order.table_number}</span>
-        <span className="admin-time"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:'inline',verticalAlign:'middle',marginLeft:'4px'}} aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {getTimeAgo ? getTimeAgo(order.created_at) : ''}</span>
+        <span className="admin-time"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:'inline',verticalAlign:'middle',marginLeft:'4px'}} aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <LiveTimeAgo date={order.created_at} /></span>
       </div>
       <div className="admin-card-ref">طلب رقم #{order.order_ref}</div>
       {order.customer_name && <div className="admin-card-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:'inline',verticalAlign:'middle',marginLeft:'4px'}} aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> {order.customer_name}</div>}
@@ -524,4 +522,20 @@ function DraggableOrderCard({ order, status, config, updateStatus, deleteOrder, 
       </div>
     </div>
   )
+}
+
+function LiveTimeAgo({ date }) {
+  const [now, setNow] = useState(Date.now())
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  if (!date) return null
+
+  const s = Math.max(0, Math.floor((now - new Date(date).getTime()) / 1000))
+  if (s < 60) return `${s} ثانية`
+  if (s < 3600) return `${Math.floor(s / 60)} دقيقة`
+  return `${Math.floor(s / 3600)} ساعة`
 }
