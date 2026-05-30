@@ -121,7 +121,7 @@ export default function Menu() {
   const filteredItems =
     activeCategory === 'all'
       ? menuItems
-      : menuItems.filter((item) => item.category === activeCategory)
+      : menuItems.filter((item) => stripEmojis(item.category).trim() === stripEmojis(activeCategory).trim())
 
   const updateHighlight = useCallback(() => {
     const tabs = tabsRef.current
