@@ -195,12 +195,6 @@ export default function Admin() {
     }
   }
 
-  const deleteOrder = async (id) => {
-    if (confirm('حذف هذا الطلب؟')) {
-      await supabase.from('orders').delete().eq('id', id)
-    }
-  }
-
   const activeOrders = orders.filter(o => o.status !== 'done')
   const baseOrders = filter === 'active' ? activeOrders : orders
   const displayOrders = useMemo(() => baseOrders.filter(o => {
@@ -423,8 +417,6 @@ export default function Admin() {
       )}
     </div>
   )
-}
-
 }
 
 function DroppableColumn({ id, status, config, colOrders, updateStatus, deleteOrder }) {
