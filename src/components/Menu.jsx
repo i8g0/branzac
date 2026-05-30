@@ -69,6 +69,7 @@ export default function Menu() {
   const [menuItems, setMenuItems] = useState([])
   const [categories, setCategories] = useState([{ id: 'all', name: 'الكل' }])
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
   const menuGridRef = useRef(null)
   const tabsRef = useRef(null)
   const { addItem } = useCartActions()
@@ -123,10 +124,12 @@ export default function Menu() {
     }
   }, [])
 
-  const filteredItems =
-    activeCategory === 'all'
-      ? menuItems
-      : menuItems.filter((item) => stripEmojis(item.category).trim() === stripEmojis(activeCategory).trim())
+  const filteredItems = menuItems.filter((item) => {
+    const matchCategory = activeCategory === 'all' || stripEmojis(item.category).trim() === stripEmojis(activeCategory).trim()
+    const q = searchQuery.trim().toLowerCase()
+    const matchSearch = !q || item.name.toLowerCase().includes(q) || (item.name_en && item.name_en.toLowerCase().includes(q))
+    return matchCategory && matchSearch
+  })
 
   return (
     <section className="menu-section" id="menu" aria-labelledby="menu-heading">
@@ -137,6 +140,21 @@ export default function Menu() {
         <p className="section-subtitle">
           استمتع بتشكيلة فريدة من القهوة المختصة والحلويات المميزة المحضرة يومياً بكل حب
         </p>
+
+        <div className="menu-search-wrapper">
+          <div className="menu-search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input
+              type="text"
+              placeholder="ابحث عن صنف..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button type="button" className="menu-search-clear" onClick={() => setSearchQuery('')}>✕</button>
+            )}
+          </div>
+        </div>
 
         <div className="menu-tabs" role="tablist" aria-label="أقسام المنيو" ref={tabsRef}>
           {categories.map((cat) => (

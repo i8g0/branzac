@@ -254,7 +254,6 @@ h1, h2, h3, h4, h5, h6 {
   transition: all var(--transition-base);
   display: flex;
   align-items: center;
-  overflow: hidden;
 }
 
 .navbar.scrolled {
@@ -268,8 +267,6 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 100%;
-  padding: 0 20px;
 }
 
 .navbar-logo {
@@ -313,12 +310,10 @@ h1, h2, h3, h4, h5, h6 {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  gap: var(--space-xl);
   list-style: none;
   margin: 0;
   padding: 0;
-  flex-shrink: 1;
-  min-width: 0;
 }
 
 .badge-slot {
@@ -770,6 +765,72 @@ h1, h2, h3, h4, h5, h6 {
   height: 120px;
   background: linear-gradient(180deg, var(--cream) 0%, transparent 100%);
   pointer-events: none;
+}
+
+/* Menu Search */
+.menu-search-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-xl);
+}
+
+.menu-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: var(--radius-full);
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 420px;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.menu-search:focus-within {
+  border-color: var(--green-600);
+  box-shadow: 0 0 0 4px rgba(26, 58, 42, 0.08);
+}
+
+.menu-search svg {
+  color: var(--text-light);
+  flex-shrink: 0;
+}
+
+.menu-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  font-family: var(--font-arabic);
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.menu-search input::placeholder {
+  color: var(--text-light);
+}
+
+.menu-search-clear {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  color: var(--text-light);
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.menu-search-clear:hover {
+  background: #e5e7eb;
+  color: var(--text-primary);
 }
 
 /* Menu Tabs */
@@ -2538,7 +2599,6 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  flex-shrink: 0;
 }
 
 /* Hero Extras */
