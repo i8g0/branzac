@@ -39,9 +39,9 @@ export default function AdminTestimonials() {
     e.preventDefault()
     const payload = {
       name: formData.name,
-      name_en: formData.role, // We use name_en to store the Role
+      name_en: formData.role,
       description: formData.text,
-      price: formData.rating, // Store rating in price
+      price: formData.rating,
       category: '__site_testimonial__',
       image: '',
     }
@@ -51,7 +51,7 @@ export default function AdminTestimonials() {
     } else {
       await supabase.from('menu_items').update(payload).eq('id', editingItem)
     }
-    
+
     setEditingItem(null)
     fetchTestimonials()
   }
@@ -61,19 +61,17 @@ export default function AdminTestimonials() {
     setFormData({ name: '', role: '', text: '', rating: 5 })
   }
 
-  if (loading) return <div className="admin-panel-loading">جاري تحميل الآراء...</div>
+  if (loading) return <div className="settings-loading"><div className="admin-spinner"></div><p>جاري تحميل الآراء...</p></div>
 
   return (
     <div className="admin-menu-manager">
       <div className="admin-menu-header">
         <h2>إدارة آراء العملاء</h2>
-        <button type="button" className="add-item-btn" onClick={startNew}>
-          + إضافة رأي جديد
+        <button type="button" className="settings-btn-primary" onClick={startNew}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إضافة رأي جديد
         </button>
       </div>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '20px', fontSize: '0.9rem' }}>
-        قم بإضافة أو تعديل آراء العملاء المعروضة في الصفحة الرئيسية.
-      </p>
 
       <AdminModal
         open={Boolean(editingItem)}
@@ -88,33 +86,32 @@ export default function AdminTestimonials() {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="مثال: أحمد محمد"
             />
           </div>
-          
           <div className="form-group">
-            <label>المسمى أو الوصف (مثال: عميل دائم، خبير قهوة)</label>
+            <label>المسمى (اختياري)</label>
             <input
               type="text"
               value={formData.role}
               onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+              placeholder="مثال: عميل دائم"
             />
           </div>
-
           <div className="form-group">
-            <label>التقييم (النجوم)</label>
+            <label>التقييم</label>
             <select
               value={formData.rating}
               onChange={(e) => setFormData({ ...formData, rating: Number(e.target.value) })}
-              style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'var(--green-900)', color: 'white', fontFamily: 'inherit' }}
+              style={{ width: '100%', padding: '11px 14px', background: '#f8f9fa', border: '2px solid transparent', borderRadius: '10px', fontFamily: 'var(--font-arabic)', fontSize: '0.95rem', color: 'var(--text-primary)', transition: 'all 0.25s ease' }}
             >
-              <option value={5}>⭐⭐⭐⭐⭐ (5 نجوم)</option>
-              <option value={4}>⭐⭐⭐⭐ (4 نجوم)</option>
-              <option value={3}>⭐⭐⭐ (3 نجوم)</option>
-              <option value={2}>⭐⭐ (نجمتين)</option>
-              <option value={1}>⭐ (نجمة واحدة)</option>
+              <option value={5}>5 نجوم</option>
+              <option value={4}>4 نجوم</option>
+              <option value={3}>3 نجوم</option>
+              <option value={2}>نجمتين</option>
+              <option value={1}>نجمة واحدة</option>
             </select>
           </div>
-
           <div className="form-group">
             <label>نص التقييم</label>
             <textarea
@@ -122,10 +119,9 @@ export default function AdminTestimonials() {
               rows="4"
               value={formData.text}
               onChange={(e) => setFormData({ ...formData, text: e.target.value })}
-              style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'var(--green-900)', color: 'white', fontFamily: 'inherit' }}
+              placeholder="اكتب تقييم العميل هنا..."
             />
           </div>
-
           <div className="form-actions">
             <button type="button" onClick={() => setEditingItem(null)} className="cancel-btn">إلغاء</button>
             <button type="submit" className="save-btn">حفظ الرأي</button>
@@ -133,39 +129,41 @@ export default function AdminTestimonials() {
         </form>
       </AdminModal>
 
-      <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
+      <div style={{ overflowX: 'auto', width: '100%' }}>
         <table className="admin-menu-table">
           <thead>
             <tr>
-              <th>اسم العميل</th>
-              <th>الوصف</th>
+              <th>العميل</th>
               <th>التقييم</th>
-              <th>نص التقييم</th>
-              <th>الإجراءات</th>
+              <th>النص</th>
+              <th style={{ width: '150px' }}>الإجراءات</th>
             </tr>
           </thead>
           <tbody>
             {testimonials.map((item) => (
               <tr key={item.id}>
-                <td><strong>{item.name}</strong></td>
-                <td><span style={{ color: 'var(--gray-500)', fontSize: '0.9rem' }}>{item.name_en}</span></td>
                 <td>
-                  <span style={{ color: 'var(--gold)' }}>
+                  <div>
+                    <span className="item-name">{item.name}</span>
+                    {item.name_en && <span className="item-name-en">{item.name_en}</span>}
+                  </div>
+                </td>
+                <td>
+                  <span style={{ color: '#f59e0b', fontSize: '1rem', letterSpacing: 2 }}>
                     {'★'.repeat(item.price > 0 ? item.price : 5)}
-                    <span style={{ color: 'rgba(255,255,255,0.1)' }}>{'★'.repeat(5 - (item.price > 0 ? item.price : 5))}</span>
                   </span>
                 </td>
-                <td style={{ maxWidth: '250px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.description}</td>
+                <td style={{ maxWidth: 250, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-light)', fontSize: '0.88rem' }}>{item.description}</td>
                 <td>
-                  <button type="button" onClick={() => handleEdit(item)} className="edit-btn">تعديل</button>
-                  <button type="button" onClick={() => handleDelete(item.id)} className="delete-btn">حذف</button>
+                  <div className="item-actions">
+                    <button type="button" onClick={() => handleEdit(item)} className="edit-btn">تعديل</button>
+                    <button type="button" onClick={() => handleDelete(item.id)} className="delete-btn">حذف</button>
+                  </div>
                 </td>
               </tr>
             ))}
             {testimonials.length === 0 && (
-              <tr>
-                <td colSpan={4} style={{ textAlign: 'center' }}>لا توجد آراء مسجلة حالياً.</td>
-              </tr>
+              <tr><td colSpan={4} className="admin-menu-empty"><p>لا توجد آراء بعد</p></td></tr>
             )}
           </tbody>
         </table>

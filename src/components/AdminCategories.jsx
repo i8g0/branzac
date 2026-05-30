@@ -31,7 +31,7 @@ export default function AdminCategories() {
     setUploadingIcon(false)
 
     if (error) {
-      alert('حدث خطأ أثناء رفع الأيقونة: تأكد من تفعيل Storage في Supabase')
+      alert('حدث خطأ أثناء رفع الأيقونة')
       return
     }
 
@@ -58,11 +58,7 @@ export default function AdminCategories() {
   }
 
   const handleDelete = async (id) => {
-    if (
-      confirm(
-        'هل أنت متأكد من حذف هذا القسم؟ إذا كان هناك منتجات فيه قد تختفي من العرض.'
-      )
-    ) {
+    if (confirm('هل أنت متأكد من حذف هذا القسم؟')) {
       await supabase.from('menu_categories').delete().eq('id', id)
       fetchCategories()
     }
@@ -84,16 +80,15 @@ export default function AdminCategories() {
     setFormData({ name: '', icon: '' })
   }
 
-  if (loading) {
-    return <div className="admin-panel-loading">جاري تحميل الأقسام...</div>
-  }
+  if (loading) return <div className="settings-loading"><div className="admin-spinner"></div><p>جاري تحميل الأقسام...</p></div>
 
   return (
     <div className="admin-menu-manager">
       <div className="admin-menu-header">
         <h2>إدارة الأقسام</h2>
-        <button type="button" className="add-item-btn" onClick={startNew}>
-          + إضافة قسم جديد
+        <button type="button" className="settings-btn-primary" onClick={startNew}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إضافة قسم جديد
         </button>
       </div>
 
@@ -104,16 +99,17 @@ export default function AdminCategories() {
       >
         <form onSubmit={handleSave}>
           <div className="form-group">
-            <label>اسم القسم (مثل: مشروبات باردة)</label>
+            <label>اسم القسم</label>
             <input
               required
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="مثال: مشروبات باردة"
             />
           </div>
           <div className="form-group">
-            <label>شكل أيقونة القسم (اختياري)</label>
+            <label>الأيقونة</label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(60px, 1fr))', gap: '8px', marginTop: '8px' }}>
               {AVAILABLE_ICONS.map((iconOpt) => (
                 <button
@@ -122,11 +118,10 @@ export default function AdminCategories() {
                   onClick={() => setFormData({ ...formData, icon: iconOpt.id })}
                   style={{
                     display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    padding: '8px', border: formData.icon === iconOpt.id ? '2px solid #d4af37' : '1px solid #e5e7eb',
+                    padding: '8px', border: formData.icon === iconOpt.id ? '2px solid var(--gold)' : '1px solid #e5e7eb',
                     borderRadius: '8px', background: formData.icon === iconOpt.id ? '#fdf8e7' : '#fff',
                     cursor: 'pointer', transition: 'all 0.2s ease', gap: '4px'
                   }}
-                  title={iconOpt.label}
                 >
                   <IconRenderer iconStr={iconOpt.id} size={24} color={formData.icon === iconOpt.id ? '#b48530' : '#4b5563'} />
                   <span style={{ fontSize: '10px', color: '#4b5563', textAlign: 'center' }}>{iconOpt.label}</span>
@@ -142,91 +137,56 @@ export default function AdminCategories() {
                   cursor: 'pointer', transition: 'all 0.2s ease', gap: '4px'
                 }}
               >
-                <div style={{width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280'}}>✕</div>
+                <div style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>✕</div>
                 <span style={{ fontSize: '10px', color: '#4b5563', textAlign: 'center' }}>بدون</span>
               </button>
             </div>
-            
-            <div style={{ marginTop: '16px', borderTop: '1px solid var(--gray-200)', paddingTop: '16px' }}>
-              <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>أو قم برفع أيقونة مخصصة (SVG, PNG):</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px' }}>
-                {formData.icon && (formData.icon.startsWith('http') || formData.icon.startsWith('/')) && (
-                  <div style={{ width: '40px', height: '40px', background: 'var(--gray-50)', borderRadius: '8px', border: '1px solid var(--gray-200)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <img src={formData.icon} alt="Custom Icon" style={{ maxWidth: '24px', maxHeight: '24px', objectFit: 'contain' }} />
-                  </div>
-                )}
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleIconUpload} 
-                  disabled={uploadingIcon} 
-                  style={{ display: 'none' }}
-                  id="category-icon-upload"
-                />
-                <label 
-                  htmlFor="category-icon-upload" 
-                  className="add-item-btn" 
-                  style={{ 
-                    display: 'inline-flex', 
-                    alignItems: 'center', 
-                    cursor: 'pointer',
-                    padding: '8px 16px',
-                    fontSize: '0.85rem',
-                    background: 'var(--gray-100)',
-                    color: 'var(--text-primary)',
-                    border: '1px solid var(--gray-300)'
-                  }}
-                >
-                  {uploadingIcon ? 'جاري الرفع...' : '📤 اختيار ملف'}
+            <div style={{ marginTop: '16px', borderTop: '1px solid #f0f0f0', paddingTop: '16px' }}>
+              <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>أو رفع أيقونة مخصصة:</label>
+              <div className="modal-image-section" style={{ marginTop: 8 }}>
+                <label className="upload-btn" style={{ cursor: 'pointer' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  {uploadingIcon ? 'جاري الرفع...' : 'اختر ملف'}
+                  <input type="file" accept="image/*" onChange={handleIconUpload} disabled={uploadingIcon} style={{ display: 'none' }} />
                 </label>
               </div>
             </div>
           </div>
           <div className="form-actions">
-            <button type="button" onClick={() => setEditingCat(null)} className="cancel-btn">
-              إلغاء
-            </button>
-            <button type="submit" className="save-btn">
-              حفظ القسم
-            </button>
+            <button type="button" onClick={() => setEditingCat(null)} className="cancel-btn">إلغاء</button>
+            <button type="submit" className="save-btn">حفظ القسم</button>
           </div>
         </form>
       </AdminModal>
 
-      <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
+      <div style={{ overflowX: 'auto', width: '100%' }}>
         <table className="admin-menu-table">
           <thead>
             <tr>
-              <th>الأيقونة</th>
+              <th style={{ width: '70px' }}>الأيقونة</th>
               <th>اسم القسم</th>
-              <th>الإجراءات</th>
+              <th style={{ width: '150px' }}>الإجراءات</th>
             </tr>
           </thead>
           <tbody>
             {categories.map((cat) => (
               <tr key={cat.id}>
                 <td>
-                  <IconRenderer iconStr={cat.icon} size={24} color="var(--green-700)" />
+                  <div style={{ width: 40, height: 40, borderRadius: 8, background: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <IconRenderer iconStr={cat.icon} size={22} color="var(--green-700)" />
+                  </div>
                 </td>
+                <td><span className="item-name">{stripEmojis(cat.name)}</span></td>
                 <td>
-                  <strong>{stripEmojis(cat.name)}</strong>
-                </td>
-                <td>
-                  <button type="button" onClick={() => handleEdit(cat)} className="edit-btn">
-                    تعديل
-                  </button>
-                  <button type="button" onClick={() => handleDelete(cat.id)} className="delete-btn">
-                    حذف
-                  </button>
+                  <div className="item-actions">
+                    <button type="button" onClick={() => handleEdit(cat)} className="edit-btn">تعديل</button>
+                    <button type="button" onClick={() => handleDelete(cat.id)} className="delete-btn">حذف</button>
+                  </div>
                 </td>
               </tr>
             ))}
             {categories.length === 0 && (
-              <tr>
-                <td colSpan={3} style={{ textAlign: 'center' }}>
-                  لا توجد أقسام حالياً.
-                </td>
-              </tr>
+              <tr><td colSpan={3} className="admin-menu-empty"><p>لا توجد أقسام بعد</p></td></tr>
             )}
           </tbody>
         </table>

@@ -35,6 +35,12 @@ const MenuCard = memo(function MenuCard({ item, onAdd }) {
       <div className="menu-card-body">
         <h3>{item.name}</h3>
         {item.nameEn && <span className="card-name-en">{item.nameEn}</span>}
+        {item.calories > 0 && (
+          <span className="card-calories">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+            {item.calories} سعرة
+          </span>
+        )}
         <p className="card-desc">{item.description}</p>
         <div className="menu-card-footer">
           <span className="price">
@@ -65,7 +71,6 @@ export default function Menu() {
   const [loading, setLoading] = useState(true)
   const menuGridRef = useRef(null)
   const tabsRef = useRef(null)
-  const highlightRef = useRef(null)
   const { addItem } = useCartActions()
 
   useEffect(() => {
@@ -123,27 +128,6 @@ export default function Menu() {
       ? menuItems
       : menuItems.filter((item) => stripEmojis(item.category).trim() === stripEmojis(activeCategory).trim())
 
-  const updateHighlight = useCallback(() => {
-    const tabs = tabsRef.current
-    const highlight = highlightRef.current
-    if (!tabs || !highlight) return
-
-    const activeButton = tabs.querySelector(`button[data-cat="${activeCategory}"]`)
-    if (!activeButton) return
-
-    const left = activeButton.offsetLeft
-    const width = activeButton.offsetWidth
-
-    highlight.style.width = `${width}px`
-    highlight.style.transform = `translateX(${left}px)`
-  }, [activeCategory])
-
-  useEffect(() => {
-    updateHighlight()
-    window.addEventListener('resize', updateHighlight)
-    return () => window.removeEventListener('resize', updateHighlight)
-  }, [updateHighlight])
-
   return (
     <section className="menu-section" id="menu" aria-labelledby="menu-heading">
       <div className="container">
@@ -155,7 +139,6 @@ export default function Menu() {
         </p>
 
         <div className="menu-tabs" role="tablist" aria-label="أقسام المنيو" ref={tabsRef}>
-          <span className="menu-tab-highlight" ref={highlightRef} aria-hidden="true" />
           {categories.map((cat) => (
             <button
               key={cat.id}
@@ -164,8 +147,17 @@ export default function Menu() {
               data-cat={cat.id}
               aria-selected={activeCategory === cat.id}
               className={`menu-tab ${activeCategory === cat.id ? 'active' : ''}`}
-              onClick={() => {
+              onClick={(e) => {
                 setActiveCategory(cat.id)
+                const tab = e.currentTarget
+                const container = tabsRef.current
+                if (tab && container) {
+                  const tabLeft = tab.offsetLeft
+                  const tabWidth = tab.offsetWidth
+                  const containerWidth = container.offsetWidth
+                  const scrollLeft = tabLeft - (containerWidth / 2) + (tabWidth / 2)
+                  container.scrollTo({ left: scrollLeft, behavior: 'smooth' })
+                }
                 menuGridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
               }}
             >

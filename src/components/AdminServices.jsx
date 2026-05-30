@@ -69,7 +69,7 @@ export default function AdminServices() {
     } else {
       await supabase.from('menu_items').update(payload).eq('id', editingItem)
     }
-    
+
     setEditingItem(null)
     fetchServices()
   }
@@ -79,19 +79,17 @@ export default function AdminServices() {
     setFormData({ name: '', description: '', image: '' })
   }
 
-  if (loading) return <div className="admin-panel-loading">جاري تحميل الخدمات...</div>
+  if (loading) return <div className="settings-loading"><div className="admin-spinner"></div><p>جاري تحميل الخدمات...</p></div>
 
   return (
     <div className="admin-menu-manager">
       <div className="admin-menu-header">
         <h2>إدارة قسم الخدمات</h2>
-        <button type="button" className="add-item-btn" onClick={startNew}>
-          + إضافة خدمة جديدة
+        <button type="button" className="settings-btn-primary" onClick={startNew}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إضافة خدمة جديدة
         </button>
       </div>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '20px', fontSize: '0.9rem' }}>
-        قم بإضافة أو تعديل الخدمات التي تظهر في الصفحة الرئيسية (مثل: قهوة مختصة، أجواء هادئة، واي فاي مجاني).
-      </p>
 
       <AdminModal
         open={Boolean(editingItem)}
@@ -100,15 +98,15 @@ export default function AdminServices() {
       >
         <form onSubmit={handleSave}>
           <div className="form-group">
-            <label>عنوان الخدمة (مثال: قهوة مختصة)</label>
+            <label>عنوان الخدمة</label>
             <input
               required
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="مثال: قهوة مختصة"
             />
           </div>
-          
           <div className="form-group">
             <label>وصف الخدمة</label>
             <textarea
@@ -116,21 +114,22 @@ export default function AdminServices() {
               rows="3"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'var(--green-900)', color: 'white', fontFamily: 'inherit' }}
+              placeholder="وصف مختصر للخدمة..."
             />
           </div>
-
           <div className="form-group">
-            <label>أيقونة الخدمة (SVG أو PNG)</label>
-            {formData.image && (
-              <div style={{ marginBottom: '10px' }}>
-                <img src={formData.image} alt="Service Icon" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
-              </div>
-            )}
-            <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploadingImg} />
-            {uploadingImg && <small style={{ color: 'var(--gold-dark)', display: 'block', marginTop: '5px' }}>جاري رفع الأيقونة...</small>}
+            <label>أيقونة الخدمة</label>
+            <div className="modal-image-section">
+              {formData.image && (
+                <img src={formData.image} alt="معاينة" style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: 10, borderRadius: 8 }} />
+              )}
+              <label className="upload-btn" style={{ cursor: 'pointer' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                {uploadingImg ? 'جاري الرفع...' : 'اختر أيقونة'}
+                <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploadingImg} style={{ display: 'none' }} />
+              </label>
+            </div>
           </div>
-
           <div className="form-actions">
             <button type="button" onClick={() => setEditingItem(null)} className="cancel-btn">إلغاء</button>
             <button type="submit" className="save-btn" disabled={uploadingImg}>حفظ الخدمة</button>
@@ -138,14 +137,14 @@ export default function AdminServices() {
         </form>
       </AdminModal>
 
-      <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
+      <div style={{ overflowX: 'auto', width: '100%' }}>
         <table className="admin-menu-table">
           <thead>
             <tr>
-              <th>الأيقونة</th>
+              <th style={{ width: '70px' }}>الأيقونة</th>
               <th>الخدمة</th>
               <th>الوصف</th>
-              <th>الإجراءات</th>
+              <th style={{ width: '150px' }}>الإجراءات</th>
             </tr>
           </thead>
           <tbody>
@@ -153,23 +152,25 @@ export default function AdminServices() {
               <tr key={item.id}>
                 <td>
                   {item.image ? (
-                    <img src={item.image} alt={item.name} style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+                    <img src={item.image} alt="" style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'contain' }} />
                   ) : (
-                    <span style={{ color: 'var(--gray-500)' }}>لا يوجد</span>
+                    <div style={{ width: 40, height: 40, borderRadius: 8, background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                    </div>
                   )}
                 </td>
-                <td><strong>{item.name}</strong></td>
-                <td style={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.description}</td>
+                <td><span className="item-name">{item.name}</span></td>
+                <td style={{ maxWidth: 250, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-light)', fontSize: '0.88rem' }}>{item.description}</td>
                 <td>
-                  <button type="button" onClick={() => handleEdit(item)} className="edit-btn">تعديل</button>
-                  <button type="button" onClick={() => handleDelete(item.id)} className="delete-btn">حذف</button>
+                  <div className="item-actions">
+                    <button type="button" onClick={() => handleEdit(item)} className="edit-btn">تعديل</button>
+                    <button type="button" onClick={() => handleDelete(item.id)} className="delete-btn">حذف</button>
+                  </div>
                 </td>
               </tr>
             ))}
             {services.length === 0 && (
-              <tr>
-                <td colSpan={4} style={{ textAlign: 'center' }}>لا توجد خدمات حالياً.</td>
-              </tr>
+              <tr><td colSpan={4} className="admin-menu-empty"><p>لا توجد خدمات بعد</p></td></tr>
             )}
           </tbody>
         </table>

@@ -282,55 +282,58 @@ export default function Admin() {
       )}
 
       <header className="admin-header">
-        <div className="admin-header-title">
-          <img src={logo} alt="Branzac Logo" className="admin-logo" />
-          <div className="admin-tabs">
-            <button className={`admin-tab-btn ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => setActiveTab('orders')}>
-              الطلبات {newOrdersCount > 0 && <span className="tab-badge">{newOrdersCount}</span>}
-            </button>
-            <button className={`admin-tab-btn ${activeTab === 'hero' ? 'active' : ''}`} onClick={() => setActiveTab('hero')}>
-              الصور
-            </button>
-            <button className={`admin-tab-btn ${activeTab === 'menu' ? 'active' : ''}`} onClick={() => setActiveTab('menu')}>
-              إدارة المنيو
-            </button>
-            <button className={`admin-tab-btn ${activeTab === 'categories' ? 'active' : ''}`} onClick={() => setActiveTab('categories')}>
-              إدارة الأقسام
-            </button>
-            <button className={`admin-tab-btn ${activeTab === 'services' ? 'active' : ''}`} onClick={() => setActiveTab('services')}>
-              الخدمات
-            </button>
-            <button className={`admin-tab-btn ${activeTab === 'testimonials' ? 'active' : ''}`} onClick={() => setActiveTab('testimonials')}>
-              آراء العملاء
-            </button>
-            <button className={`admin-tab-btn ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>
-              الرسائل {newMessagesCount > 0 && <span className="tab-badge">{newMessagesCount}</span>}
-            </button>
-            <button className={`admin-tab-btn ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
-              الإعدادات
-            </button>
+        <div className="admin-header-top">
+          <div className="admin-header-right">
+            <img src={logo} alt="Branzac Logo" className="admin-logo" />
           </div>
+          {adminSession && (
+            <div className="admin-header-left">
+              <button
+                type="button"
+                className="admin-user-btn"
+                onClick={() => adminSession.setView('change-password')}
+                title="تغيير كلمة المرور"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </button>
+              <button
+                type="button"
+                className="admin-logout-btn"
+                onClick={adminSession.handleLogout}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                خروج
+              </button>
+            </div>
+          )}
         </div>
-        {adminSession && (
-          <div className="admin-header-user">
-            <button
-              type="button"
-              className="admin-user-btn"
-              onClick={() => adminSession.setView('change-password')}
-              title="تغيير كلمة المرور"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            </button>
-            <button
-              type="button"
-              className="admin-logout-btn"
-              onClick={adminSession.handleLogout}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-              خروج
-            </button>
-          </div>
-        )}
+
+        <div className="admin-tabs">
+          <button className={`admin-tab-btn ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => setActiveTab('orders')}>
+            الطلبات {newOrdersCount > 0 && <span className="tab-badge">{newOrdersCount}</span>}
+          </button>
+          <button className={`admin-tab-btn ${activeTab === 'hero' ? 'active' : ''}`} onClick={() => setActiveTab('hero')}>
+            الصور
+          </button>
+          <button className={`admin-tab-btn ${activeTab === 'menu' ? 'active' : ''}`} onClick={() => setActiveTab('menu')}>
+            إدارة المنيو
+          </button>
+          <button className={`admin-tab-btn ${activeTab === 'categories' ? 'active' : ''}`} onClick={() => setActiveTab('categories')}>
+            إدارة الأقسام
+          </button>
+          <button className={`admin-tab-btn ${activeTab === 'services' ? 'active' : ''}`} onClick={() => setActiveTab('services')}>
+            الخدمات
+          </button>
+          <button className={`admin-tab-btn ${activeTab === 'testimonials' ? 'active' : ''}`} onClick={() => setActiveTab('testimonials')}>
+            آراء العملاء
+          </button>
+          <button className={`admin-tab-btn ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>
+            الرسائل {newMessagesCount > 0 && <span className="tab-badge">{newMessagesCount}</span>}
+          </button>
+          <button className={`admin-tab-btn ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
+            الإعدادات
+          </button>
+        </div>
         
         {activeTab === 'orders' && (
           <div className="admin-header-actions">

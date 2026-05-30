@@ -1,12 +1,10 @@
 import { supabase } from '../lib/supabase'
 
-export default function AdminMessages({ messages, setMessages }) {
+export default function AdminMessages({ messages, fetchOrdersAndMessages }) {
   const deleteMessage = async (id) => {
     if (!confirm('هل أنت متأكد من حذف هذه الرسالة؟')) return
-    
-    // Optimistic update
-    setMessages(prev => prev.filter(m => m.id !== id))
     await supabase.from('contact_messages').delete().eq('id', id)
+    if (fetchOrdersAndMessages) fetchOrdersAndMessages()
   }
 
   const formatDate = (dateString) => {
@@ -15,36 +13,50 @@ export default function AdminMessages({ messages, setMessages }) {
   }
 
   return (
-    <div className="admin-messages-container" style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
-      <h2 style={{ marginBottom: '20px', color: 'var(--green-900)' }}>رسائل العملاء ✉️</h2>
+    <div className="admin-menu-manager">
+      <div className="admin-menu-header">
+        <h2>رسائل العملاء</h2>
+        <span style={{ background: 'var(--green-700)', color: 'white', padding: '6px 14px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 700 }}>
+          {messages.length} رسالة
+        </span>
+      </div>
+
       {messages.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px', background: 'white', borderRadius: '12px', border: '1px solid #ddd' }}>لا توجد رسائل حالياً</div>
+        <div style={{ textAlign: 'center', padding: '60px 20px', background: 'white', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 16, opacity: 0.3 }}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <p style={{ color: 'var(--text-light)', fontSize: '1rem' }}>لا توجد رسائل حالياً</p>
+        </div>
       ) : (
-        <div style={{ display: 'grid', gap: '15px' }}>
+        <div style={{ display: 'grid', gap: '12px' }}>
           {messages.map(msg => (
-            <div key={msg.id} style={{ background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid #ddd', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
-                <strong style={{ fontSize: '1.1rem', color: 'var(--green-700)' }}>{msg.name || 'عميل'}</strong>
-                <span style={{ fontSize: '0.85rem', color: '#999' }}>{formatDate(msg.created_at)}</span>
-              </div>
-              
-              {msg.phone && (
-                <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                  📞 <strong>رقم التواصل:</strong> <span dir="ltr">{msg.phone}</span>
+            <div key={msg.id} style={{
+              background: 'white', padding: '20px', borderRadius: '14px',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid rgba(0,0,0,0.04)',
+              transition: 'all 0.2s'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid #f0f0f0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, var(--green-700), var(--green-600))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '1rem' }}>
+                    {(msg.name || 'ع')[0]}
+                  </div>
+                  <div>
+                    <strong style={{ fontSize: '1rem', color: 'var(--text-primary)', display: 'block' }}>{msg.name || 'عميل'}</strong>
+                    {msg.phone && <span style={{ fontSize: '0.82rem', color: 'var(--text-light)', direction: 'ltr', display: 'block' }}>{msg.phone}</span>}
+                  </div>
                 </div>
-              )}
-              
-              <div style={{ background: 'var(--cream)', padding: '15px', borderRadius: '8px', fontSize: '1rem', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
-                {msg.message}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-light)' }}>{formatDate(msg.created_at)}</span>
+                  <button
+                    onClick={() => deleteMessage(msg.id)}
+                    className="delete-btn"
+                    style={{ padding: '6px 12px' }}
+                  >
+                    حذف
+                  </button>
+                </div>
               </div>
-              
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-                <button 
-                  onClick={() => deleteMessage(msg.id)}
-                  style={{ background: '#e74c3c', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-                >
-                  حذف الرسالة 🗑️
-                </button>
+              <div style={{ background: '#f8f9fa', padding: '14px', borderRadius: '10px', fontSize: '0.95rem', lineHeight: '1.8', color: 'var(--text-primary)', whiteSpace: 'pre-wrap' }}>
+                {msg.message}
               </div>
             </div>
           ))}
