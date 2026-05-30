@@ -1,67 +1,63 @@
-import { useEffect } from 'react'
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { useCart } from './context/CartContext'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Menu from './components/Menu'
-import About from './components/About'
-import Services from './components/Services'
-import Testimonials from './components/Testimonials'
-import Contact from './components/Contact'
-import Cart from './components/Cart'
-import Footer from './components/Footer'
-import Admin from './pages/Admin'
+
+import { useAnchorScroll } from './hooks/useAnchorScroll'
+import CartToast from './components/ui/CartToast'
+
+const Navbar = lazy(() => import('./components/Navbar'))
+const Hero = lazy(() => import('./components/Hero'))
+const Menu = lazy(() => import('./components/Menu'))
+const About = lazy(() => import('./components/About'))
+const Testimonials = lazy(() => import('./components/Testimonials'))
+const Contact = lazy(() => import('./components/Contact'))
+const Cart = lazy(() => import('./components/Cart'))
+const Footer = lazy(() => import('./components/Footer'))
+const Admin = lazy(() => import('./pages/Admin'))
+const AdminGuard = lazy(() => import('./components/AdminGuard'))
+
+function SectionFallback({ minHeight = '40vh' }) {
+  return (
+    <div
+      className="section-fallback"
+      style={{ minHeight }}
+      aria-hidden="true"
+    />
+  )
+}
 
 function HomePage() {
-  const { toast } = useCart()
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add('revealed')
-        })
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    )
-    const els = document.querySelectorAll('.reveal')
-    els.forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const handleClick = (e) => {
-      const target = e.target.closest('a[href^="#"]')
-      if (!target) return
-      e.preventDefault()
-      const el = document.getElementById(target.getAttribute('href').slice(1))
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-    document.addEventListener('click', handleClick)
-    return () => document.removeEventListener('click', handleClick)
-  }, [])
+  useAnchorScroll()
 
   return (
     <div className="app">
-      <Navbar />
-      <main>
-        <Hero />
-        <Menu />
-        <About />
-        <Services />
-        <Testimonials />
-        <Contact />
+      <Suspense fallback={<SectionFallback minHeight="72px" />}>
+        <Navbar />
+      </Suspense>
+      <main id="main-content">
+        <Suspense fallback={<SectionFallback minHeight="100vh" />}>
+          <Hero />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <Menu />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <About />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <Testimonials />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
+          <Contact />
+        </Suspense>
       </main>
-      <Footer />
-      <Cart />
-      {toast && (
-        <div className="toast" key={toast.id}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d6847" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          <span>{toast.message}</span>
-        </div>
-      )}
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
+      <Suspense fallback={null}>
+        <Cart />
+      </Suspense>
+      <CartToast />
     </div>
   )
 }
@@ -71,7 +67,16 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route
+          path="/admin"
+          element={
+            <Suspense fallback={<div className="admin-loading">جاري التحميل...</div>}>
+              <AdminGuard>
+                <Admin />
+              </AdminGuard>
+            </Suspense>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )

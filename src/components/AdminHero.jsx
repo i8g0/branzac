@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { uploadImage } from '../lib/uploadImage'
 
 export default function AdminHero() {
   const [slides, setSlides] = useState([])
   const [aboutData, setAboutData] = useState(null)
   const [logoData, setLogoData] = useState(null)
+  const [welcomeData, setWelcomeData] = useState(null)
+  const [taglineData, setTaglineData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [uploadingBg, setUploadingBg] = useState(false)
   const [uploadingLogo, setUploadingLogo] = useState(false)
@@ -13,13 +16,17 @@ export default function AdminHero() {
   const [editingSlide, setEditingSlide] = useState(null)
   const [editingAbout, setEditingAbout] = useState(false)
 
+  const [welcomeForm, setWelcomeForm] = useState({ name: 'مرحباً بكم في' })
+  const [taglineForm, setTaglineForm] = useState({ name: 'حيث تلتقي القهوة المختصة بالأجواء الاستثنائية' })
+
   const [formData, setFormData] = useState({
     name: '', image: '', description: ''
   })
   
   const [aboutForm, setAboutForm] = useState({
-    name: '', description: '', image: ''
+    name: '', description: '', image: '', blur_data: '',
   })
+  const [slideBlur, setSlideBlur] = useState('')
 
   const fetchSlidesAndAbout = async () => {
     setLoading(true)
@@ -44,6 +51,26 @@ export default function AdminHero() {
       .maybeSingle()
     if (logoRecord) setLogoData(logoRecord)
     
+    const { data: welcomeRecord } = await supabase
+      .from('menu_items')
+      .select('*')
+      .eq('category', '__site_welcome__')
+      .maybeSingle()
+    if (welcomeRecord) {
+      setWelcomeData(welcomeRecord)
+      setWelcomeForm({ name: welcomeRecord.name })
+    }
+
+    const { data: taglineRecord } = await supabase
+      .from('menu_items')
+      .select('*')
+      .eq('category', '__site_tagline__')
+      .maybeSingle()
+    if (taglineRecord) {
+      setTaglineData(taglineRecord)
+      setTaglineForm({ name: taglineRecord.name })
+    }
+    
     setLoading(false)
   }
 
@@ -52,87 +79,70 @@ export default function AdminHero() {
   }, [])
 
   const handleImageUpload = async (e, type) => {
-    const file = e.target.files[0]
+    const file = e.target.files?.[0]
     if (!file) return
 
     if (type === 'bg') setUploadingBg(true)
     else setUploadingLogo(true)
 
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
-    const filePath = `hero/${fileName}`
-
-    const { error: uploadError } = await supabase.storage.from('menu-images').upload(filePath, file)
-
-    if (uploadError) {
-      alert('حدث خطأ أثناء رفع الصورة: تأكد من تفعيل Storage في Supabase')
-      console.error(uploadError)
-      if (type === 'bg') setUploadingBg(false)
-      else setUploadingLogo(false)
-      return
-    }
-
-    const { data: { publicUrl } } = supabase.storage.from('menu-images').getPublicUrl(filePath)
-    
-    setFormData(prev => ({
-      ...prev,
-      [type === 'bg' ? 'image' : 'description']: publicUrl
-    }))
+    const { error, publicUrl, blurData } = await uploadImage(file, 'hero')
 
     if (type === 'bg') setUploadingBg(false)
     else setUploadingLogo(false)
+
+    if (error) {
+      alert('حدث خطأ أثناء رفع الصورة: تأكد من تفعيل Storage في Supabase')
+      return
+    }
+
+    if (type === 'bg') {
+      setSlideBlur(blurData || '')
+      setFormData((prev) => ({ ...prev, image: publicUrl }))
+    } else {
+      setFormData((prev) => ({ ...prev, description: publicUrl }))
+    }
   }
 
   const handleAboutImageUpload = async (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files?.[0]
     if (!file) return
 
     setUploadingAboutImg(true)
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
-    const filePath = `about/${fileName}`
+    const { error, publicUrl, blurData } = await uploadImage(file, 'about')
+    setUploadingAboutImg(false)
 
-    const { error: uploadError } = await supabase.storage.from('menu-images').upload(filePath, file)
-
-    if (uploadError) {
+    if (error) {
       alert('حدث خطأ أثناء رفع الصورة: تأكد من تفعيل Storage في Supabase')
-      console.error(uploadError)
-      setUploadingAboutImg(false)
       return
     }
 
-    const { data: { publicUrl } } = supabase.storage.from('menu-images').getPublicUrl(filePath)
-    setAboutForm(prev => ({ ...prev, image: publicUrl }))
-    setUploadingAboutImg(false)
+    setAboutForm((prev) => ({
+      ...prev,
+      image: publicUrl,
+      blur_data: blurData || prev.blur_data,
+    }))
   }
 
   const handleGlobalLogoUpload = async (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files?.[0]
     if (!file) return
 
     setUploadingLogo(true)
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
-    const filePath = `logo/${fileName}`
+    const { error, publicUrl } = await uploadImage(file, 'logo')
+    setUploadingLogo(false)
 
-    const { error: uploadError } = await supabase.storage.from('menu-images').upload(filePath, file)
-
-    if (uploadError) {
+    if (error) {
       alert('حدث خطأ أثناء رفع الشعار: تأكد من تفعيل Storage في Supabase')
-      console.error(uploadError)
-      setUploadingLogo(false)
       return
     }
 
-    const { data: { publicUrl } } = supabase.storage.from('menu-images').getPublicUrl(filePath)
-    
     const payload = {
       name: 'شعار الموقع الرئيسي',
       name_en: 'Site Logo',
       description: 'Site Logo URL',
       price: 0,
       category: '__site_logo__',
-      image: publicUrl
+      image: publicUrl,
     }
 
     if (logoData) {
@@ -141,7 +151,41 @@ export default function AdminHero() {
       await supabase.from('menu_items').insert([payload])
     }
 
-    setUploadingLogo(false)
+    fetchSlidesAndAbout()
+  }
+
+  const handleSaveHeroTexts = async (e) => {
+    e.preventDefault()
+    
+    const welcomePayload = {
+      name: welcomeForm.name || 'مرحباً بكم في',
+      name_en: 'Site Welcome',
+      description: 'Site Welcome Phrase',
+      price: 0,
+      category: '__site_welcome__',
+      image: '',
+    }
+    if (welcomeData) {
+      await supabase.from('menu_items').update(welcomePayload).eq('id', welcomeData.id)
+    } else {
+      await supabase.from('menu_items').insert([welcomePayload])
+    }
+
+    const taglinePayload = {
+      name: taglineForm.name || 'حيث تلتقي القهوة المختصة بالأجواء الاستثنائية',
+      name_en: 'Site Tagline',
+      description: 'Site Main Tagline',
+      price: 0,
+      category: '__site_tagline__',
+      image: '',
+    }
+    if (taglineData) {
+      await supabase.from('menu_items').update(taglinePayload).eq('id', taglineData.id)
+    } else {
+      await supabase.from('menu_items').insert([taglinePayload])
+    }
+    
+    alert('تم حفظ نصوص قسم الترحيب بنجاح!')
     fetchSlidesAndAbout()
   }
 
@@ -158,16 +202,26 @@ export default function AdminHero() {
       description: '',
       price: 0,
       category: '__hero_slide__',
-      image: formData.image
+      image: formData.image,
     }
+    if (slideBlur) payload.blur_data = slideBlur
 
     if (editingSlide === 'new') {
-      await supabase.from('menu_items').insert([payload])
+      const { error } = await supabase.from('menu_items').insert([payload])
+      if (error?.message?.includes('blur_data')) {
+        delete payload.blur_data
+        await supabase.from('menu_items').insert([payload])
+      }
     } else {
-      await supabase.from('menu_items').update(payload).eq('id', editingSlide)
+      const { error } = await supabase.from('menu_items').update(payload).eq('id', editingSlide)
+      if (error?.message?.includes('blur_data')) {
+        delete payload.blur_data
+        await supabase.from('menu_items').update(payload).eq('id', editingSlide)
+      }
     }
 
     setEditingSlide(null)
+    setSlideBlur('')
     fetchSlidesAndAbout()
   }
 
@@ -179,13 +233,22 @@ export default function AdminHero() {
       description: aboutForm.description,
       price: 0,
       category: '__site_about__',
-      image: aboutForm.image
+      image: aboutForm.image,
     }
+    if (aboutForm.blur_data) payload.blur_data = aboutForm.blur_data
 
     if (aboutData) {
-      await supabase.from('menu_items').update(payload).eq('id', aboutData.id)
+      const { error } = await supabase.from('menu_items').update(payload).eq('id', aboutData.id)
+      if (error?.message?.includes('blur_data')) {
+        delete payload.blur_data
+        await supabase.from('menu_items').update(payload).eq('id', aboutData.id)
+      }
     } else {
-      await supabase.from('menu_items').insert([payload])
+      const { error } = await supabase.from('menu_items').insert([payload])
+      if (error?.message?.includes('blur_data')) {
+        delete payload.blur_data
+        await supabase.from('menu_items').insert([payload])
+      }
     }
 
     setEditingAbout(false)
@@ -201,10 +264,11 @@ export default function AdminHero() {
 
   const handleEdit = (slide) => {
     setEditingSlide(slide.id)
+    setSlideBlur(slide.blur_data || '')
     setFormData({
       name: slide.name,
       image: slide.image,
-      description: slide.description || ''
+      description: slide.description || '',
     })
   }
 
@@ -213,12 +277,14 @@ export default function AdminHero() {
     setAboutForm({
       name: aboutData?.name || 'شغفنا بالقهوة المختصة',
       description: aboutData?.description || '',
-      image: aboutData?.image || '/images/cafe-interior.png'
+      image: aboutData?.image || '/images/cafe-interior.png',
+      blur_data: aboutData?.blur_data || '',
     })
   }
 
   const startNew = () => {
     setEditingSlide('new')
+    setSlideBlur('')
     setFormData({ name: '', image: '', description: '' })
   }
 
@@ -290,6 +356,46 @@ export default function AdminHero() {
           </small>
         </div>
       </div>
+
+      <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.08)', margin: '40px 0' }} />
+
+      {/* 0.5. Global Welcome Phrase and Tagline Section */}
+      <div className="admin-menu-header" style={{ marginBottom: '10px' }}>
+        <h2>نصوص قسم الترحيب الرئيسية (Hero Texts)</h2>
+      </div>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '20px', fontSize: '0.9rem' }}>
+        النصوص التي تظهر فوق وتحت الشعار في الصفحة الرئيسية.
+      </p>
+      
+      <form onSubmit={handleSaveHeroTexts} style={{ 
+        background: 'rgba(255, 255, 255, 0.02)', 
+        padding: '24px', 
+        borderRadius: '12px', 
+        border: '1px solid rgba(255,255,255,0.05)', 
+        marginBottom: '40px'
+      }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', marginBottom: '24px' }}>
+          <div className="form-group" style={{ marginBottom: 0, flex: '1 1 300px', maxWidth: '400px' }}>
+            <label>النص الترحيبي (فوق الشعار)</label>
+            <input 
+              type="text" 
+              value={welcomeForm.name} 
+              onChange={(e) => setWelcomeForm({...welcomeForm, name: e.target.value})} 
+              placeholder="مرحباً بكم في"
+            />
+          </div>
+          <div className="form-group" style={{ marginBottom: 0, flex: '1 1 300px', maxWidth: '400px' }}>
+            <label>العبارة الرئيسية (تحت الشعار)</label>
+            <input 
+              type="text" 
+              value={taglineForm.name} 
+              onChange={(e) => setTaglineForm({...taglineForm, name: e.target.value})} 
+              placeholder="حيث تلتقي القهوة المختصة بالأجواء الاستثنائية"
+            />
+          </div>
+        </div>
+        <button type="submit" className="save-btn" style={{ width: 'fit-content' }}>حفظ النصوص</button>
+      </form>
 
       <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.08)', margin: '40px 0' }} />
 

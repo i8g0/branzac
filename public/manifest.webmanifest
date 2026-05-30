@@ -1,0 +1,19 @@
+{
+  "name": "BRANZAG | برانزاك",
+  "short_name": "BRANZAG",
+  "description": "كافيه القهوة المختصة في الرياض",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "oklch(98% 0.01 85)",
+  "theme_color": "oklch(22% 0.05 150)",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/images/logo-bg.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

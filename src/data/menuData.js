@@ -269,9 +269,9 @@ export const menuData = [
 
 export const categories = [
   { id: 'all', name: 'الكل' },
-  { id: 'hot', name: 'مشروبات ساخنة ☕' },
-  { id: 'cold', name: 'مشروبات باردة 🧊' },
-  { id: 'desserts', name: 'حلويات 🍰' }
+  { id: 'hot', name: 'مشروبات ساخنة' },
+  { id: 'cold', name: 'مشروبات باردة' },
+  { id: 'desserts', name: 'حلويات' }
 ]
 
 export const testimonials = [

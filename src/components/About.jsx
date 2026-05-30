@@ -1,84 +1,76 @@
-import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
+import { motion } from 'framer-motion'
+import { useSiteAbout } from '../hooks/useSiteAbout'
+import PremiumImage from './ui/PremiumImage'
+import { springSoft } from '../lib/motion'
 
-const DEFAULT_HEADING = 'شغفنا بالقهوة المختصة'
-const DEFAULT_DESC = `في برانزاك، نؤمن بأن القهوة ليست مجرد مشروب — إنها تجربة متكاملة. نختار بعناية أجود حبوب البن من إثيوبيا وكولومبيا والبرازيل، ونحمّصها بأسلوب حرفي يُبرز أفضل نكهاتها. من المزرعة إلى فنجانك، نحرص على كل تفصيلة لنقدّم لك تجربة قهوة استثنائية في قلب الرياض.
+const DEFAULTS = {
+  heading: 'شغفنا بالقهوة المختصة',
+  description: `في برانزاك، نؤمن بأن القهوة ليست مجرد مشروب — إنها تجربة متكاملة. نختار بعناية أجود حبوب البن من إثيوبيا وكولومبيا والبرازيل، ونحمّصها بأسلوب حرفي يُبرز أفضل نكهاتها. من المزرعة إلى فنجانك، نحرص على كل تفصيلة لنقدّم لك تجربة قهوة استثنائية في قلب الرياض.
 
-صمّمنا مقهانا ليكون أكثر من مجرد مكان لشرب القهوة. أجواء فريدة تجمع بين الراحة والإلهام، مع مساحة عمل مشتركة مجهّزة بكل ما يحتاجه المحترفون وعشّاق القهوة. سواء كنت تبحث عن لحظة هدوء أو مكان إنتاجي، برانزاك هو وجهتك المثالية.`
+صمّمنا مقهانا ليكون أكثر من مجرد مكان لشرب القهوة. أجواء فريدة تجمع بين الراحة والإلهام، مع مساحة عمل مشتركة مجهّزة بكل ما يحتاجه المحترفون وعشّاق القهوة. سواء كنت تبحث عن لحظة هدوء أو مكان إنتاجي، برانزاك هو وجهتك المثالية.`,
+  image: '/images/cafe-interior.png',
+}
+
+const STATS = [
+  { number: '+١٠٠٠', label: 'عميل سعيد' },
+  { number: '+١٤', label: 'صنف مميز' },
+  { number: '٢٠٢٣', label: 'سنة التأسيس' },
+]
 
 export default function About() {
-  const [aboutData, setAboutData] = useState(null)
-
-  useEffect(() => {
-    const fetchAboutData = async () => {
-      const { data } = await supabase
-        .from('menu_items')
-        .select('*')
-        .eq('category', '__site_about__')
-        .single()
-      if (data) {
-        setAboutData(data)
-      }
-    }
-    fetchAboutData()
-
-    // Listen for realtime changes
-    const channel = supabase
-      .channel('about-realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'menu_items', filter: 'category=eq.__site_about__' }, () => {
-        fetchAboutData()
-      })
-      .subscribe()
-
-    return () => {
-      supabase.removeChannel(channel)
-    }
-  }, [])
-
-  const headingText = aboutData?.name || DEFAULT_HEADING
-  const descText = aboutData?.description || DEFAULT_DESC
-  const imageUrl = aboutData?.image || '/images/cafe-interior.png'
-
-  const paragraphs = descText.split('\n').filter(p => p.trim() !== '')
+  const { heading, description, image, blurData } = useSiteAbout(DEFAULTS)
+  const paragraphs = description.split('\n').filter((p) => p.trim() !== '')
 
   return (
-    <section id="about" className="about-section">
+    <section id="about" className="about-section" aria-labelledby="about-heading">
       <div className="container">
-        <h2 className="section-title section-title-light">قصتنا</h2>
-        <p className="section-subtitle section-subtitle-light">شغف حقيقي بالقهوة المختصة منذ اليوم الأول</p>
+        <h2 id="about-heading" className="section-title section-title-light">
+          قصتنا
+        </h2>
+        <p className="section-subtitle section-subtitle-light">
+          شغف حقيقي بالقهوة المختصة منذ اليوم الأول
+        </p>
 
         <div className="about-grid">
-          <div className="about-image reveal">
-            <img
-              src={imageUrl}
+          <motion.div
+            className="about-image"
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={springSoft}
+          >
+            <PremiumImage
+              src={image}
               alt="برانزاك - أجواء الكافيه"
-              loading="lazy"
+              aspectRatio="4/3"
+              placeholderSrc={blurData || undefined}
+              wrapperClassName="about-image-wrap"
             />
-          </div>
+          </motion.div>
 
-          <div className="about-text reveal">
-            <div className="about-divider"></div>
-            <h3>{headingText}</h3>
-            
+          <motion.div
+            className="about-text"
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ ...springSoft, delay: 0.08 }}
+          >
+            <div className="about-divider" aria-hidden="true" />
+            <h3>{heading}</h3>
+
             {paragraphs.map((p, idx) => (
               <p key={idx}>{p}</p>
             ))}
 
             <div className="about-stats">
-              <div className="about-stat">
-                <span className="stat-number">+١٠٠٠</span>
-                <span className="stat-label">عميل سعيد</span>
-              </div>
-              <div className="about-stat">
-                <span className="stat-number">+١٤</span>
-                <span className="stat-label">صنف مميز</span>
-              </div>
-              <div className="about-stat">
-                <span className="stat-number">٢٠٢٣</span>
-                <span className="stat-label">سنة التأسيس</span>
-              </div>
+              {STATS.map((stat) => (
+                <div key={stat.label} className="about-stat">
+                  <span className="stat-number">{stat.number}</span>
+                  <span className="stat-label">{stat.label}</span>
+                </div>
+              ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
