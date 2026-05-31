@@ -39,7 +39,7 @@ export default function Admin() {
   const [searchQuery, setSearchQuery] = useState('')
   const [alertOrder, setAlertOrder] = useState(null)
   const [audioEnabled, setAudioEnabled] = useState(false)
-  const [activeTab, setActiveTab] = useState('orders')
+  const [activeTab, setActiveTab] = useState('dashboard')
   const [activeDragOrder, setActiveDragOrder] = useState(null)
   const logo = useSiteLogo()
   const adminSession = useAdminSession()
@@ -309,6 +309,9 @@ export default function Admin() {
         </div>
 
         <div className="admin-tabs">
+          <button className={`admin-tab-btn ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
+            لوحة التحكم
+          </button>
           <button className={`admin-tab-btn ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => setActiveTab('orders')}>
             الطلبات {newOrdersCount > 0 && <span className="tab-badge">{newOrdersCount}</span>}
           </button>
@@ -365,7 +368,68 @@ export default function Admin() {
         )}
       </header>
 
-      {activeTab !== 'orders' ? (
+      {activeTab === 'dashboard' && (
+        <div className="dash-stats-page">
+          <div className="dash-stats-grid">
+            <div className="dash-stat-card">
+              <div className="dash-stat-icon green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div className="dash-stat-info">
+                <span className="dash-stat-label">إجمالي المبيعات</span>
+                <span className="dash-stat-value">{orders.filter(o => o.status === 'done').reduce((s, o) => s + (o.total_price || 0), 0)} ر.س</span>
+                <span className="dash-stat-change green">+{orders.filter(o => o.status === 'done').length} طلب مكتمل</span>
+              </div>
+            </div>
+            <div className="dash-stat-card">
+              <div className="dash-stat-icon blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              </div>
+              <div className="dash-stat-info">
+                <span className="dash-stat-label">إجمالي الطلبات</span>
+                <span className="dash-stat-value">{orders.length}</span>
+                <span className="dash-stat-change green">+{newOrdersCount} جديد</span>
+              </div>
+            </div>
+            <div className="dash-stat-card">
+              <div className="dash-stat-icon orange">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div className="dash-stat-info">
+                <span className="dash-stat-label">قيد التحضير</span>
+                <span className="dash-stat-value">{orders.filter(o => o.status === 'preparing').length}</span>
+                <span className="dash-stat-change orange">جاري التحضير</span>
+              </div>
+            </div>
+            <div className="dash-stat-card">
+              <div className="dash-stat-icon red">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              </div>
+              <div className="dash-stat-info">
+                <span className="dash-stat-label">طلبات جديدة</span>
+                <span className="dash-stat-value">{newOrdersCount}</span>
+                <span className="dash-stat-change red">بانتظار القبول</span>
+              </div>
+            </div>
+          </div>
+          <div className="dash-recent">
+            <h3>آخر الطلبات</h3>
+            <div className="dash-recent-table">
+              {orders.slice(0, 5).map(order => (
+                <div key={order.id} className="dash-recent-row">
+                  <span className="dash-recent-ref">#{order.order_ref}</span>
+                  <span className="dash-recent-name">{order.customer_name || 'عميل'}</span>
+                  <span className="dash-recent-status" style={{ background: STATUS_CONFIG[order.status]?.color + '20', color: STATUS_CONFIG[order.status]?.color }}>{STATUS_CONFIG[order.status]?.label}</span>
+                  <span className="dash-recent-total">{order.total_price} ر.س</span>
+                </div>
+              ))}
+              {orders.length === 0 && <p className="dash-column-empty">لا توجد طلبات بعد</p>}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab !== 'orders' && activeTab !== 'dashboard' ? (
         <Suspense fallback={<div className="admin-loading"><div className="admin-spinner"></div></div>}>
           {activeTab === 'menu' && <AdminMenu />}
           {activeTab === 'categories' && <AdminCategories />}
