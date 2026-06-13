@@ -370,10 +370,11 @@ export default function Admin() {
 
       {activeTab === 'dashboard' && (
         <div className="dash-stats-page">
+          {/* Stats Cards */}
           <div className="dash-stats-grid">
             <div className="dash-stat-card">
               <div className="dash-stat-icon green">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               </div>
               <div className="dash-stat-info">
                 <span className="dash-stat-label">إجمالي المبيعات</span>
@@ -383,7 +384,7 @@ export default function Admin() {
             </div>
             <div className="dash-stat-card">
               <div className="dash-stat-icon blue">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
               </div>
               <div className="dash-stat-info">
                 <span className="dash-stat-label">إجمالي الطلبات</span>
@@ -393,7 +394,7 @@ export default function Admin() {
             </div>
             <div className="dash-stat-card">
               <div className="dash-stat-icon orange">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
               <div className="dash-stat-info">
                 <span className="dash-stat-label">قيد التحضير</span>
@@ -403,7 +404,7 @@ export default function Admin() {
             </div>
             <div className="dash-stat-card">
               <div className="dash-stat-icon red">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
               </div>
               <div className="dash-stat-info">
                 <span className="dash-stat-label">طلبات جديدة</span>
@@ -412,8 +413,64 @@ export default function Admin() {
               </div>
             </div>
           </div>
+
+          {/* Charts Row */}
+          <div className="dash-charts-grid">
+            {/* Order Status Distribution */}
+            <div className="dash-chart-card">
+              <h3>توزيع الطلبات</h3>
+              <div className="dash-bar-chart">
+                {[
+                  { label: 'جديد', count: orders.filter(o => o.status === 'new').length, color: '#e74c3c' },
+                  { label: 'قيد التحضير', count: orders.filter(o => o.status === 'preparing').length, color: '#f39c12' },
+                  { label: 'جاهز', count: orders.filter(o => o.status === 'ready').length, color: '#27ae60' },
+                  { label: 'مكتمل', count: orders.filter(o => o.status === 'done').length, color: '#95a5a6' },
+                ].map((bar, i) => {
+                  const max = Math.max(orders.length, 1)
+                  return (
+                    <div key={i} className="dash-bar-row">
+                      <span className="dash-bar-label">{bar.label}</span>
+                      <div className="dash-bar-track">
+                        <div className="dash-bar-fill" style={{ width: `${(bar.count / max) * 100}%`, background: bar.color }} />
+                      </div>
+                      <span className="dash-bar-value">{bar.count}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Top Items */}
+            <div className="dash-chart-card">
+              <h3>أكثر الأصناف طلباً</h3>
+              <div className="dash-top-items">
+                {(() => {
+                  const itemCounts = {}
+                  orders.forEach(o => {
+                    (o.items || []).forEach(item => {
+                      itemCounts[item.name] = (itemCounts[item.name] || 0) + item.quantity
+                    })
+                  })
+                  const sorted = Object.entries(itemCounts).sort((a, b) => b[1] - a[1]).slice(0, 5)
+                  if (sorted.length === 0) return <p className="dash-column-empty">لا توجد بيانات بعد</p>
+                  return sorted.map(([name, count], i) => (
+                    <div key={i} className="dash-top-item-row">
+                      <span className="dash-top-item-rank">{i + 1}</span>
+                      <span className="dash-top-item-name">{name}</span>
+                      <span className="dash-top-item-count">{count} مرة</span>
+                    </div>
+                  ))
+                })()}
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Orders */}
           <div className="dash-recent">
-            <h3>آخر الطلبات</h3>
+            <div className="dash-recent-header">
+              <h3>آخر الطلبات</h3>
+              <button className="dash-recent-more" onClick={() => setActiveTab('orders')}>عرض الكل</button>
+            </div>
             <div className="dash-recent-table">
               {orders.slice(0, 5).map(order => (
                 <div key={order.id} className="dash-recent-row">
