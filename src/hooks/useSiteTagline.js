@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react'
 import { supabase } from '../lib/supabase'
 
-const DEFAULT_TAGLINE = 'حيث تلتقي القهوة المختصة بالأجواء الاستثنائية'
+const DEFAULT_TAGLINE = 'حيث تلتقي أصالة الشاي بالتجربة الاستثنائية'
 const CHANNEL_NAME = 'site-tagline-shared'
 
 let taglineText = DEFAULT_TAGLINE

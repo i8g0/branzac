@@ -6,8 +6,8 @@ export function useSiteSettings() {
   const [settings, setSettings] = useState({
     phone: '+966 53 300 4327',
     whatsapp: '966533004327',
-    instagram: 'https://www.instagram.com/branzac_/',
-    tiktok: 'https://www.tiktok.com/@branzac_',
+    instagram: 'https://www.instagram.com/mahaseel_alshai/',
+    tiktok: 'https://www.tiktok.com/@mahaseel_alshai',
     address: 'الرياض، المملكة العربية السعودية',
     hours: fallbackHours
   })

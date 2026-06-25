@@ -63,7 +63,7 @@ export default function Testimonials() {
           آراء عملائنا
         </h2>
         <p className="section-subtitle section-subtitle-light">
-          ما يقوله عملاؤنا عن تجربتهم في برانزاك
+          ما يقوله عملاؤنا عن تجربتهم في محاصيل الشاي
         </p>
 
         <motion.div

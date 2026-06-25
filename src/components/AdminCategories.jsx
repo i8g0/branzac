@@ -12,7 +12,7 @@ const AVAILABLE_ICONS = [
   { id: 'croissant', label: 'مخبوزات' },
   { id: 'icecream', label: 'آيس كريم' },
   { id: 'cookie', label: 'كوكيز' },
-  { id: 'bean', label: 'قهوة' },
+  { id: 'bean', label: 'شاي' },
 ]
 
 export default function AdminCategories() {

@@ -125,7 +125,7 @@ export default function Hero() {
           {globalLogo && (
             <img
               src={globalLogo}
-              alt="BRANZAG | برانزاك"
+              alt="محاصيل الشاي"
               className="hero-logo-img"
               width={290}
               height={290}

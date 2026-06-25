@@ -8,7 +8,7 @@ export default class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
-    console.error('BRANZAG UI error:', error, info)
+    console.error('Mahaseel Al-Shai UI error:', error, info)
   }
 
   render() {

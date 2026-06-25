@@ -77,7 +77,7 @@ export default function Services() {
         <h2 id="services-heading" className="section-title">
           خدماتنا
         </h2>
-        <p className="section-subtitle">نقدّم أكثر من مجرد قهوة — نقدّم تجربة متكاملة</p>
+        <p className="section-subtitle">نقدّم أكثر من مجرد شاي — نقدّم تجربة متكاملة</p>
 
         <motion.div
           className="services-grid"

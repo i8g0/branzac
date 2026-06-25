@@ -1,277 +1,202 @@
 export const menuData = [
-  // ═══ مشروبات ساخنة (Hot Drinks) ═══
+  // ═══ شاي مغربي ═══
   {
     id: 1,
-    name: 'إسبرسو',
-    nameEn: 'Espresso',
-    description: 'شوت إسبرسو مزدوج من حبوب محمصة بعناية، كريمة غنية وطعم عميق',
-    price: 10,
+    name: 'شاي الوازة',
+    nameEn: 'Wazza Tea',
+    description: 'شاي مغربي أصيل بنكهة الوازة الفريدة',
+    price: 4,
     category: 'hot',
-    image: '/images/espresso.png'
+    image: '/images/tea.png'
   },
   {
     id: 2,
-    name: 'أمريكانو',
-    nameEn: 'Americano',
-    description: 'إسبرسو مخفف بالماء الساخن، مشروب كلاسيكي غني بنكهة القهوة',
-    price: 10,
+    name: 'شاي السمار',
+    nameEn: 'Sammar Tea',
+    description: 'شاي مغربي بنكهة السمار المميزة',
+    price: 4,
     category: 'hot',
-    image: '/images/espresso.png'
+    image: '/images/tea.png'
   },
   {
     id: 3,
-    name: 'لاتيه',
-    nameEn: 'Latte',
-    description: 'إسبرسو مع حليب مخملي ناعم، توازن مثالي بين القهوة والحليب',
-    price: 14,
+    name: 'شاي اليمان',
+    nameEn: 'Yaman Tea',
+    description: 'شاي يمني تقليدي بنكهة أصيلة',
+    price: 4,
     category: 'hot',
-    image: '/images/flat-white.png'
+    image: '/images/tea.png'
   },
   {
     id: 4,
-    name: 'كابتشينو',
-    nameEn: 'Cappuccino',
-    description: 'إسبرسو مع رغوة حليب كثيفة وحريرية، مرشوش بالكاكاو الفاخر',
-    price: 14,
+    name: 'شاي الربيع',
+    nameEn: 'Rabea Tea',
+    description: 'شاي الربيع المنعش بنكهات طبيعية',
+    price: 4,
     category: 'hot',
-    image: '/images/flat-white.png'
+    image: '/images/tea.png'
   },
   {
     id: 5,
-    name: 'فلات وايت',
-    nameEn: 'Flat White',
-    description: 'إسبرسو مزدوج مع حليب مخملي ناعم، قوام كريمي ونكهة غنية',
-    price: 13,
+    name: 'شاي الزهور',
+    nameEn: 'Zohour Tea',
+    description: 'شاي بالزهور العطرية بنكهة فريدة',
+    price: 4,
     category: 'hot',
-    image: '/images/flat-white.png'
+    image: '/images/tea.png'
   },
   {
     id: 6,
-    name: 'سبانش لاتيه',
-    nameEn: 'Spanish Latte',
-    description: 'إسبرسو مع حليب مكثف وحليب ساخن، حلاوة طبيعية وقوام كريمي',
-    price: 16,
+    name: 'كرك',
+    nameEn: 'Karak',
+    description: 'كرك شاهي بالحليب والهيل والقرنفل',
+    price: 5,
     category: 'hot',
-    image: '/images/spanish-latte.png'
+    image: '/images/karak.png'
   },
   {
     id: 7,
-    name: 'كورتادو',
-    nameEn: 'Cortado',
-    description: 'إسبرسو متوازن مع كمية متساوية من الحليب المخملي، مشروب مركّز',
-    price: 12,
+    name: 'حليب بالزنجبيل',
+    nameEn: 'Ginger Milk',
+    description: 'حليب دافئ بالزنجبيل الطازج',
+    price: 5,
     category: 'hot',
-    image: '/images/espresso.png'
+    image: '/images/tea.png'
   },
   {
     id: 8,
-    name: 'V60 إثيوبيا، كولومبيا',
-    nameEn: 'V60 Ethiopia, Colombia',
-    description: 'قهوة مقطّرة يدوياً بطريقة V60، نكهات فاكهية من حبوب أحادية المصدر',
-    price: 16,
+    name: 'كركدة',
+    nameEn: 'Karkadeh',
+    description: 'مشروب الكركدة الأحمر المنعش',
+    price: 4,
     category: 'hot',
-    image: '/images/v60.png'
+    image: '/images/tea.png'
   },
   {
     id: 9,
-    name: 'V60 محصول فاخر "وادي السيل"',
-    nameEn: 'V60 Premium Wadi Al-Sail',
-    description: 'قهوة مقطّرة من محصول فاخر محلي، نكهات استثنائية ومحدودة الإصدار',
-    price: 20,
+    name: 'كمون',
+    nameEn: 'Cumin Tea',
+    description: 'شاي الكمون للهضم والصحة',
+    price: 4,
     category: 'hot',
-    image: '/images/v60.png'
+    image: '/images/tea.png'
   },
   {
     id: 10,
-    name: 'قهوة اليوم',
-    nameEn: 'Coffee of the Day',
-    description: 'اختيار الباريستا اليومي من أجود أنواع القهوة، يتغير يومياً',
-    price: 11,
+    name: 'تنجيل بالليمون',
+    nameEn: 'Lemon Tangy',
+    description: 'تنجيل منعش بالليمون الطازج',
+    price: 4,
     category: 'hot',
-    image: '/images/v60.png'
+    image: '/images/tea.png'
   },
   {
     id: 11,
-    name: 'هوت شوكلت',
-    nameEn: 'Hot Chocolate',
-    description: 'شوكولاتة ساخنة فاخرة بقوام كريمي غني ونكهة كاكاو مميزة',
-    price: 18,
+    name: 'قرناع',
+    nameEn: 'Qarna',
+    description: 'مشروب القرناع التقليدي',
+    price: 4,
     category: 'hot',
-    image: '/images/flat-white.png'
+    image: '/images/tea.png'
   },
-
-  // ═══ مشروبات باردة (Cold Drinks) ═══
   {
     id: 12,
-    name: 'برانزاك سبيشل',
-    nameEn: 'Branzac Special',
-    description: 'مشروبنا المميز! خلطة برانزاك الخاصة من الإسبرسو والحليب والنكهات السرية',
-    price: 19,
-    category: 'cold',
-    image: '/images/iced-latte.png'
+    name: 'ورجينا',
+    nameEn: 'Wargina',
+    description: 'مشروب ورجينا المغربي الأصيل',
+    price: 4,
+    category: 'hot',
+    image: '/images/tea.png'
   },
+  // ═══ مشروبات ساخنة ═══
   {
     id: 13,
-    name: 'سبانش لاتيه بارد',
-    nameEn: 'Iced Spanish Latte',
-    description: 'إسبرسو مع حليب مكثف وحليب بارد منعش، حلاوة طبيعية مثلجة',
-    price: 17,
-    category: 'cold',
-    image: '/images/spanish-latte.png'
+    name: 'شاي أحمر',
+    nameEn: 'Red Tea',
+    description: 'شاي أحمر ساخن تقليدي',
+    price: 3,
+    category: 'hot',
+    image: '/images/tea.png'
   },
   {
     id: 14,
-    name: 'ماتشا لاتيه',
-    nameEn: 'Matcha Latte',
-    description: 'شاي ماتشا ياباني فاخر مع حليب مخفوق بارد، منعش وصحي',
-    price: 18,
-    category: 'cold',
-    image: '/images/matcha-latte.png'
+    name: 'شاي أخضر',
+    nameEn: 'Green Tea',
+    description: 'شاي أخضر طازج بالنعناع',
+    price: 3,
+    category: 'hot',
+    image: '/images/tea.png'
   },
   {
     id: 15,
-    name: 'ماتشا برانزاك',
-    nameEn: 'Matcha Branzac',
-    description: 'خلطة ماتشا خاصة بطريقة برانزاك المميزة مع نكهات فريدة',
-    price: 21,
-    category: 'cold',
-    image: '/images/matcha-latte.png'
+    name: 'نسكافيه',
+    nameEn: 'Nescafe',
+    description: 'نسكافيه ساخن بالحليب',
+    price: 5,
+    category: 'hot',
+    image: '/images/tea.png'
   },
   {
     id: 16,
-    name: 'رد اسبريسو',
-    nameEn: 'Red Espresso',
-    description: 'مشروب الرويبوس المعد بطريقة الإسبرسو، خالي من الكافيين وغني بالنكهة',
-    price: 24,
-    category: 'cold',
-    image: '/images/cold-brew.png'
+    name: 'هيل',
+    nameEn: 'Cardamom',
+    description: 'مشروب الهيل الدافئ',
+    price: 4,
+    category: 'hot',
+    image: '/images/tea.png'
   },
+  // ═══ مشروبات باردة ═══
   {
     id: 17,
-    name: 'كركديه',
-    nameEn: 'Hibiscus',
-    description: 'مشروب كركديه منعش محضّر بعناية، طعم حامضي لذيذ ومنعش',
-    price: 15,
+    name: 'عصير ليمون بالنعناع',
+    nameEn: 'Lemon Mint',
+    description: 'عصير ليمون طازج بالنعناع',
+    price: 5,
     category: 'cold',
-    image: '/images/cold-brew.png'
+    image: '/images/lemon-mint.png'
   },
   {
     id: 18,
-    name: 'V60 بارد',
-    nameEn: 'Iced V60',
-    description: 'قهوة مقطّرة بالطريقة اليابانية على الثلج مباشرة، نكهات مركزة ومنعشة',
-    price: 16,
+    name: 'موهيتو مانجو',
+    nameEn: 'Mango Mojito',
+    description: 'موهيتو مانجو منعش',
+    price: 6,
     category: 'cold',
-    image: '/images/v60.png'
+    image: '/images/mango-mojito.png'
   },
   {
     id: 19,
-    name: 'قهوة اليوم باردة',
-    nameEn: 'Iced Coffee of the Day',
-    description: 'اختيار الباريستا اليومي مقدّم بارداً على الثلج',
-    price: 11,
+    name: 'موهيتو توت',
+    nameEn: 'Berry Mojito',
+    description: 'موهيتو توت منعش',
+    price: 6,
     category: 'cold',
-    image: '/images/iced-latte.png'
+    image: '/images/berry-mojito.png'
   },
   {
     id: 20,
-    name: 'ماء',
-    nameEn: 'Water',
-    description: 'مياه معدنية نقية',
-    price: 1,
+    name: 'ميلك شيك فراولة',
+    nameEn: 'Strawberry Milkshake',
+    description: 'ميلك شيك فراولة طازجة',
+    price: 7,
     category: 'cold',
-    image: '/images/cold-brew.png'
+    image: '/images/strawberry-shake.png'
   },
-
-  // ═══ حلويات (Sweets) ═══
   {
     id: 21,
-    name: 'بيكايك',
-    nameEn: 'Bikake',
-    description: 'كيكة فاخرة بطبقات غنية وقوام هش مع صوص مميز',
-    price: 26,
-    category: 'desserts',
-    image: '/images/cheesecake.png'
+    name: 'ميلك شيك شوكولاتة',
+    nameEn: 'Chocolate Milkshake',
+    description: 'ميلك شيك شوكولاتة غنية',
+    price: 7,
+    category: 'cold',
+    image: '/images/chocolate-shake.png'
   },
-  {
-    id: 22,
-    name: 'كيو كيك',
-    nameEn: 'Q Cake',
-    description: 'كيكة مميزة بتصميم أنيق وطعم لا يُقاوم',
-    price: 24,
-    category: 'desserts',
-    image: '/images/cheesecake.png'
-  },
-  {
-    id: 23,
-    name: 'تشيز كيك',
-    nameEn: 'Cheesecake',
-    description: 'تشيز كيك كلاسيكي بقوام كريمي ذائب وقاعدة مقرمشة',
-    price: 24,
-    category: 'desserts',
-    image: '/images/cheesecake.png'
-  },
-  {
-    id: 24,
-    name: 'تراميسو',
-    nameEn: 'Tiramisu',
-    description: 'تراميسو إيطالي أصيل بطبقات من الماسكاربوني والقهوة والكاكاو',
-    price: 24,
-    category: 'desserts',
-    image: '/images/cheesecake.png'
-  },
-  {
-    id: 25,
-    name: 'سان سباستيان',
-    nameEn: 'San Sebastian',
-    description: 'تشيز كيك باسكي محروق بطريقة سان سباستيان التقليدية، كريمي وغني',
-    price: 23,
-    category: 'desserts',
-    image: '/images/cheesecake.png'
-  },
-  {
-    id: 26,
-    name: 'بودينغ',
-    nameEn: 'Pudding',
-    description: 'بودينغ كريمي فاخر محضّر يومياً بمكونات طازجة',
-    price: 21,
-    category: 'desserts',
-    image: '/images/croissant.png'
-  },
-  {
-    id: 27,
-    name: 'كوكيز',
-    nameEn: 'Cookies',
-    description: 'كوكيز طرية محشوة بقطع الشوكولاتة، مخبوزة طازجة يومياً',
-    price: 10,
-    category: 'desserts',
-    image: '/images/croissant.png'
-  },
-  {
-    id: 28,
-    name: 'براونيز كوكيز',
-    nameEn: 'Brownie Cookies',
-    description: 'مزيج مثالي بين البراوني والكوكيز، غني بالشوكولاتة',
-    price: 10,
-    category: 'desserts',
-    image: '/images/croissant.png'
-  },
-  {
-    id: 29,
-    name: 'كويكز مارشميلو',
-    nameEn: 'Marshmallow Cookies',
-    description: 'كوكيز محشوة بالمارشميلو الذائب، طرية ولذيذة',
-    price: 10,
-    category: 'desserts',
-    image: '/images/croissant.png'
-  }
 ]
 
 export const categories = [
   { id: 'all', name: 'الكل' },
-  { id: 'hot', name: 'مشروبات ساخنة' },
+  { id: 'hot', name: 'شاي مغربي وساخن' },
   { id: 'cold', name: 'مشروبات باردة' },
-  { id: 'desserts', name: 'حلويات' }
 ]
 
 export const testimonials = [
@@ -279,35 +204,35 @@ export const testimonials = [
     id: 1,
     name: 'محمد العتيبي',
     rating: 5,
-    text: 'أفضل كافيه قهوة مختصة في الرياض! الأجواء رائعة والقهوة لا تُنافس. المكان مثالي للعمل عن بُعد.',
+    text: 'أفضل محل شاي في الرياض! الكرك عندهم شيء ثاني والأجواء تراثية جميلة.',
     date: 'قبل شهر'
   },
   {
     id: 2,
     name: 'سارة الشمري',
     rating: 5,
-    text: 'تجربة استثنائية من أول زيارة. الباريستا محترف والاهتمام بالتفاصيل واضح في كل كوب.',
+    text: 'تجربة استثنائية من أول زيارة. الشاي المغربي أصيل والنكهات رائعة.',
     date: 'قبل أسبوعين'
   },
   {
     id: 3,
     name: 'عبدالله الدوسري',
     rating: 5,
-    text: 'الفلات وايت هنا شيء ثاني! والمكان تصميمه أنيق ومريح. بدون شك أفضل مكان للقهوة.',
+    text: 'شاي الوازة والكرك لازم تجربونهم! بدون شك أفضل شاي في المنطقة.',
     date: 'قبل ٣ أسابيع'
   },
   {
     id: 4,
     name: 'نورة القحطاني',
     rating: 4,
-    text: 'حبيت الأجواء الهادئة والديكور الفخم. القهوة المقطّرة V60 كانت ممتازة. أنصح بالتجربة.',
+    text: 'حبيت الأجواء الهادئة والديكور التراثي. شاي الزهور كان ممتاز. أنصح بالتجربة.',
     date: 'قبل شهرين'
   },
   {
     id: 5,
     name: 'فهد المالكي',
     rating: 5,
-    text: 'برانزاك سبيشل لازم تجربونه! مشروب خاص فيهم ما تلقاه بمكان ثاني. الحلويات بعد روعة.',
+    text: 'ورجينا وكركدة مشروبات لازم تجربونهم! محاصيل الشاي عندهم أصالة حقيقية.',
     date: 'قبل شهر'
   }
 ]

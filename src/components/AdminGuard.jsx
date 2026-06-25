@@ -150,7 +150,7 @@ export default function AdminGuard({ children }) {
       {view === 'login' && (
         <form className="admin-guard__card" onSubmit={handleLogin}>
           <img src={logo} alt="" width={120} height={120} className="admin-guard__logo" />
-          <h1>لوحة تحكم برانزاك</h1>
+          <h1>لوحة تحكم محاصيل الشاي</h1>
           <p>سجّل دخولك للمتابعة</p>
 
           <input

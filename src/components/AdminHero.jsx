@@ -16,7 +16,7 @@ export default function AdminHero() {
   const [editingSlide, setEditingSlide] = useState(null)
   const [editingAbout, setEditingAbout] = useState(false)
   const [welcomeForm, setWelcomeForm] = useState({ name: 'مرحباً بكم في' })
-  const [taglineForm, setTaglineForm] = useState({ name: 'حيث تلتقي القهوة المختصة بالأجواء الاستثنائية' })
+  const [taglineForm, setTaglineForm] = useState({ name: 'حيث تلتقي أصالة الشاي بالتجربة الاستثنائية' })
   const [formData, setFormData] = useState({ name: '', image: '', description: '' })
   const [aboutForm, setAboutForm] = useState({ name: '', description: '', image: '', blur_data: '' })
   const [slideBlur, setSlideBlur] = useState('')
@@ -58,7 +58,7 @@ export default function AdminHero() {
     const wp = { name: welcomeForm.name || 'مرحباً بكم في', name_en: 'Site Welcome', description: 'Site Welcome Phrase', price: 0, category: '__site_welcome__', image: '' }
     if (welcomeData) await supabase.from('menu_items').update(wp).eq('id', welcomeData.id)
     else await supabase.from('menu_items').insert([wp])
-    const tp = { name: taglineForm.name || 'حيث تلتقي القهوة المختصة بالأجواء الاستثنائية', name_en: 'Site Tagline', description: 'Site Main Tagline', price: 0, category: '__site_tagline__', image: '' }
+    const tp = { name: taglineForm.name || 'حيث تلتقي أصالة الشاي بالتجربة الاستثنائية', name_en: 'Site Tagline', description: 'Site Main Tagline', price: 0, category: '__site_tagline__', image: '' }
     if (taglineData) await supabase.from('menu_items').update(tp).eq('id', taglineData.id)
     else await supabase.from('menu_items').insert([tp])
     alert('تم حفظ النصوص بنجاح!')
@@ -104,7 +104,7 @@ export default function AdminHero() {
 
   const handleSaveAbout = async (e) => {
     e.preventDefault()
-    const payload = { name: aboutForm.name || 'شغفنا بالقهوة المختصة', name_en: 'About Settings', description: aboutForm.description, price: 0, category: '__site_about__', image: aboutForm.image }
+    const payload = { name: aboutForm.name || 'شغفنا بالشاي المغربي الأصيل', name_en: 'About Settings', description: aboutForm.description, price: 0, category: '__site_about__', image: aboutForm.image }
     if (aboutForm.blur_data) payload.blur_data = aboutForm.blur_data
     if (aboutData) {
       let { error } = await supabase.from('menu_items').update(payload).eq('id', aboutData.id)
@@ -176,7 +176,7 @@ export default function AdminHero() {
               </div>
               <div className="settings-field">
                 <label>العبارة الرئيسية (تحت الشعار)</label>
-                <input type="text" value={taglineForm.name} onChange={(e) => setTaglineForm({ ...taglineForm, name: e.target.value })} placeholder="حيث تلتقي القهوة المختصة بالأجواء الاستثنائية" />
+                <input type="text" value={taglineForm.name} onChange={(e) => setTaglineForm({ ...taglineForm, name: e.target.value })} placeholder="حيث تلتقي أصالة الشاي بالتجربة الاستثنائية" />
               </div>
             </div>
             <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
@@ -248,11 +248,11 @@ export default function AdminHero() {
           <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: 20, alignItems: 'start', marginBottom: 16 }}>
             <img src={aboutData?.image || '/images/cafe-interior.png'} alt="" style={{ width: '100%', height: 100, borderRadius: 10, objectFit: 'cover' }} />
             <div>
-              <h4 style={{ margin: '0 0 8px', fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 700 }}>{aboutData?.name || 'شغفنا بالقهوة المختصة'}</h4>
+              <h4 style={{ margin: '0 0 8px', fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 700 }}>{aboutData?.name || 'شغفنا بالشاي المغربي الأصيل'}</h4>
               <p style={{ margin: 0, color: 'var(--text-light)', fontSize: '0.88rem', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{aboutData?.description || 'لا يوجد وصف مخصص.'}</p>
             </div>
           </div>
-          <button className="settings-btn-primary" onClick={() => { setEditingAbout(true); setAboutForm({ name: aboutData?.name || 'شغفنا بالقهوة المختصة', description: aboutData?.description || '', image: aboutData?.image || '', blur_data: aboutData?.blur_data || '' }) }}>تعديل المحتوى</button>
+          <button className="settings-btn-primary" onClick={() => { setEditingAbout(true); setAboutForm({ name: aboutData?.name || 'شغفنا بالشاي المغربي الأصيل', description: aboutData?.description || '', image: aboutData?.image || '', blur_data: aboutData?.blur_data || '' }) }}>تعديل المحتوى</button>
         </div>
       </div>
 
@@ -286,7 +286,7 @@ export default function AdminHero() {
         <form onSubmit={handleSaveAbout}>
           <div className="form-group">
             <label>العنوان الرئيسي</label>
-            <input required type="text" value={aboutForm.name} onChange={e => setAboutForm({ ...aboutForm, name: e.target.value })} placeholder="شغفنا بالقهوة المختصة..." />
+            <input required type="text" value={aboutForm.name} onChange={e => setAboutForm({ ...aboutForm, name: e.target.value })} placeholder="شغفنا بالشاي المغربي الأصيل..." />
           </div>
           <div className="form-group">
             <label>الوصف</label>

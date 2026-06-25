@@ -104,7 +104,7 @@ export default function AdminServices() {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="مثال: قهوة مختصة"
+              placeholder="مثال: شاي مغربي"
             />
           </div>
           <div className="form-group">
