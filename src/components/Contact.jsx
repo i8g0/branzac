@@ -150,14 +150,14 @@ export default function Contact() {
           <div className="contact-info-wrapper">
             <div className="map-container">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3625.1!2d46.7758213!3d24.5924183!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f098fd758cd83%3A0xf64fed1f9a48a01a!2sBRANZAC%20%7C%20%D8%A8%D8%B1%D8%A7%D9%86%D8%B2%D8%A7%D9%83!5e0!3m2!1sar!2ssa!4v1"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3624.5!2d46.7742619!3d24.5862055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f09b69d8e1e7d%3A0xd8d56406263f6dcf!2z2YPYqtio2KrYr9ipINin2YTYrNiv2Kkg2KfZhNmF2KrYr9ip!5e0!3m2!1sar!2ssa!4v1719300000000!5m2!1sar!2ssa"
                 width="100%"
                 height="300"
                 style={{ border: 0, borderRadius: '16px' }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="موقع برانزاك على الخريطة"
+                title="موقع محاصيل الشاي على الخريطة"
               />
             </div>
 

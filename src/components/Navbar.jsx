@@ -47,7 +47,7 @@ export default function Navbar() {
         <div className="container">
           <a href="#home" className="navbar-logo">
             {logo ? (
-              <img src={logo} alt="BRANZAG | برانزاك" width={42} height={42} decoding="async" />
+              <img src={logo} alt="محاصيل الشاي" width={42} height={42} decoding="async" />
             ) : (
               <div style={{ width: 42, height: 42 }} />
             )}

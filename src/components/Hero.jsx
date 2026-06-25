@@ -10,7 +10,7 @@ import { springSoft } from '../lib/motion'
 const DEFAULT_SLIDE = {
   id: 'default',
   image: '',
-  name: 'حيث تلتقي القهوة المختصة بالأجواء الاستثنائية',
+  name: 'حيث تلتقي أصالة الشاي بالتجربة الاستثنائية',
 }
 
 export default function Hero() {

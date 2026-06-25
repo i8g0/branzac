@@ -16,10 +16,10 @@ export default function Footer() {
       <div className="footer-content">
         <div className="footer-grid">
           <div className="footer-col">
-            <img src={logo} alt="BRANZAG" className="footer-logo" width={60} height={60} decoding="async" />
+            <img src={logo} alt="محاصيل الشاي" className="footer-logo" width={60} height={60} decoding="async" />
             <p className="footer-about">
-              نقدّم لكم أجود أنواع القهوة المختصة في أجواء فريدة تجمع بين الفخامة والراحة.
-              برانزاك... حيث كل رشفة تحكي قصة.
+              نقدّم لكم أجود أنواع الشاي المغربي والكرك والمشروبات الساخنة في أجواء تراثية دافئة.
+              محاصيل الشاي... حيث كل رشفة تحكي قصة.
             </p>
             <div className="footer-social">
               {settings.instagram && (
@@ -85,7 +85,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© {currentYear} BRANZAG | برانزاك — جميع الحقوق محفوظة</p>
+          <p>© {currentYear} محاصيل الشاي — جميع الحقوق محفوظة</p>
           <p className="footer-credit">صُنع بكل شغف وحب</p>
         </div>
       </div>
