@@ -290,7 +290,7 @@ export default function AdminHero() {
           </div>
           <div className="form-group">
             <label>الوصف</label>
-            <textarea required rows="5" value={aboutForm.description} onChange={e => setAboutForm({ ...aboutForm, description: e.target.value })} placeholder="اكتب قصة الكافيه هنا..." />
+            <textarea required rows="5" value={aboutForm.description} onChange={e => setAboutForm({ ...aboutForm, description: e.target.value })} placeholder="اكتب قصة المحل هنا..." />
           </div>
           <div className="form-group">
             <label>الصورة</label>
