@@ -24,7 +24,11 @@ export default function SplashScreen({ onComplete }) {
     <div className={`splash-screen ${fadeOut ? 'splash-fade-out' : ''}`}>
       <div className="splash-content">
         <div className="splash-logo-img">
-          <img src="/images/logo-transparent.png" alt="محاصيل الشاي" width={200} height={200} />
+          <img src="/images/logo-transparent.png" alt="" width={160} height={160} />
+        </div>
+
+        <div className="splash-brand-text">
+          <img src="/images/logo-bg.png" alt="محاصيل الشاي" />
         </div>
 
         <div className="splash-progress-bar">

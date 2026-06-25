@@ -8,11 +8,9 @@ import { uploadImage } from '../lib/uploadImage'
 const AVAILABLE_ICONS = [
   { id: 'hot', label: 'ساخن' },
   { id: 'cold', label: 'بارد' },
-  { id: 'dessert', label: 'حلى' },
-  { id: 'croissant', label: 'مخبوزات' },
-  { id: 'icecream', label: 'آيس كريم' },
-  { id: 'cookie', label: 'كوكيز' },
-  { id: 'bean', label: 'شاي' },
+  { id: 'tea', label: 'شاي' },
+  { id: 'karak', label: 'كرك' },
+  { id: 'herbal', label: 'أعشاب' },
 ]
 
 export default function AdminCategories() {

@@ -22,6 +22,10 @@ function pushToast(set, message) {
   }, TOAST_DURATION_MS)
 }
 
+function cartItemKey(item) {
+  return item.selectedSize ? `${item.id}__${item.selectedSize}` : item.id
+}
+
 export const useCartStore = create(
   persist(
     (set) => ({
@@ -33,30 +37,33 @@ export const useCartStore = create(
 
       addItem: (product) => {
         set((state) => {
-          const existing = state.items.find((item) => item.id === product.id)
+          const key = cartItemKey(product)
+          const existing = state.items.find((item) => cartItemKey(item) === key)
           const items = existing
             ? state.items.map((item) =>
-                item.id === product.id
+                cartItemKey(item) === key
                   ? { ...item, quantity: item.quantity + 1 }
                   : item
               )
-            : [...state.items, { ...product, quantity: 1 }]
+            : [...state.items, { ...product, quantity: 1, _key: key }]
           return { items }
         })
-        pushToast(set, `تمت إضافة ${product.name} إلى السلة`)
+        const sizeLabel = product.selectedSize ? ` (${product.selectedSize})` : ''
+        pushToast(set, `تمت إضافة ${product.name}${sizeLabel} إلى السلة`)
       },
 
-      removeItem: (id) => {
+      removeItem: (key) => {
         set((state) => ({
-          items: state.items.filter((item) => item.id !== id),
+          items: state.items.filter((item) => (item._key || cartItemKey(item)) !== key),
         }))
       },
 
-      updateQuantity: (id, delta) => {
+      updateQuantity: (key, delta) => {
         set((state) => ({
           items: state.items
             .map((item) => {
-              if (item.id !== id) return item
+              const itemKey = item._key || cartItemKey(item)
+              if (itemKey !== key) return item
               const newQty = item.quantity + delta
               return newQty <= 0 ? null : { ...item, quantity: newQty }
             })
@@ -69,7 +76,7 @@ export const useCartStore = create(
       dismissToast: () => set({ toast: null }),
     }),
     {
-      name: 'branzag-cart',
+      name: 'mhasel-cart',
       partialize: (state) => ({ items: state.items }),
     }
   )

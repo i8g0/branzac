@@ -8,11 +8,28 @@ import { springSnappy } from '../lib/motion'
 import IconRenderer from './IconRenderer'
 import PremiumImage from './ui/PremiumImage'
 import { normalizeMenuItem } from '../lib/normalizeMenuItem'
+import { fetchSizesConfig, getSizesForItem, getPriceForSize } from '../lib/sizesStore'
 
-const MenuCard = memo(function MenuCard({ item, onAdd }) {
+const MenuCard = memo(function MenuCard({ item, onAdd, sizesConfig }) {
+  const sizes = getSizesForItem(sizesConfig, item.name)
+  const [selectedSize, setSelectedSize] = useState(null)
+
+  useEffect(() => {
+    if (sizes && sizes.length > 0 && !selectedSize) {
+      setSelectedSize(sizes[0].name)
+    }
+  }, [sizes])
+
+  const currentPrice = selectedSize && sizes
+    ? getPriceForSize(sizes, selectedSize)
+    : item.price
+
   const handleAdd = useCallback(() => {
-    onAdd(normalizeMenuItem(item))
-  }, [item, onAdd])
+    const product = normalizeMenuItem(item)
+    product.price = currentPrice
+    product.selectedSize = selectedSize || null
+    onAdd(product)
+  }, [item, onAdd, currentPrice, selectedSize])
 
   return (
     <motion.article
@@ -41,10 +58,27 @@ const MenuCard = memo(function MenuCard({ item, onAdd }) {
             {item.calories} سعرة
           </span>
         )}
-        <p className="card-desc">{item.description}</p>
+        {item.description && <p className="card-desc">{item.description}</p>}
+
+        {sizes && sizes.length > 0 && (
+          <div className="size-selector">
+            {sizes.map((size) => (
+              <button
+                key={size.name}
+                type="button"
+                className={`size-btn ${selectedSize === size.name ? 'size-btn--active' : ''}`}
+                onClick={() => setSelectedSize(size.name)}
+              >
+                <span className="size-btn__name">{size.name}</span>
+                <span className="size-btn__price">{formatPrice(size.price)} ر.س</span>
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="menu-card-footer">
           <span className="price">
-            {formatPrice(item.price)} <small>ر.س</small>
+            {formatPrice(currentPrice)} <small>ر.س</small>
           </span>
           <button
             type="button"
@@ -70,6 +104,7 @@ export default function Menu() {
   const [categories, setCategories] = useState([{ id: 'all', name: 'الكل' }])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [sizesConfig, setSizesConfig] = useState({})
   const menuGridRef = useRef(null)
   const tabsRef = useRef(null)
   const { addItem } = useCartActions()
@@ -78,9 +113,10 @@ export default function Menu() {
     let cancelled = false
 
     const fetchData = async () => {
-      const [menuRes, catRes] = await Promise.all([
+      const [menuRes, catRes, sizesRes] = await Promise.all([
         supabase.from('menu_items').select('*').order('created_at', { ascending: true }),
         supabase.from('menu_categories').select('*').order('created_at', { ascending: true }),
+        fetchSizesConfig(),
       ])
 
       if (cancelled) return
@@ -98,6 +134,7 @@ export default function Menu() {
           ...catRes.data.map((c) => ({ id: c.name, name: c.name, icon: c.icon })),
         ])
       }
+      setSizesConfig(sizesRes)
       setLoading(false)
     }
 
@@ -138,7 +175,7 @@ export default function Menu() {
           قائمة الأصناف
         </h2>
         <p className="section-subtitle">
-          استمتع بتشكيلة فريدة من الشاي المغربي والمشروبات الساخنة والباردة المحضّرة يومياً بكل حب
+          استمتع بتشكيلة فريدة من الشاي المغربي والمشروبات الساخنة المحضّرة يومياً بكل حب
         </p>
 
         <div className="menu-search-wrapper">
@@ -203,7 +240,7 @@ export default function Menu() {
             </p>
           ) : (
             filteredItems.map((item) => (
-              <MenuCard key={item.id} item={item} onAdd={addItem} />
+              <MenuCard key={item.id} item={item} onAdd={addItem} sizesConfig={sizesConfig} />
             ))
           )}
         </div>

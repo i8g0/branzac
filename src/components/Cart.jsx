@@ -160,6 +160,7 @@ export default function Cart() {
         name: i.name,
         quantity: i.quantity,
         price: i.price,
+        size: i.selectedSize || null,
       })),
       total_price: totalPrice,
       status: 'new',
@@ -281,61 +282,67 @@ export default function Cart() {
                 ) : (
                   <>
                     <ul className="cart-items">
-                      {items.map((item) => (
-                        <li key={item.id} className="cart-item">
-                          <div className="cart-item-img">
-                            <PremiumImage
-                              src={item.image}
-                              alt=""
-                              aspectRatio="1"
-                              wrapperClassName="cart-item-image-wrap"
-                            />
-                          </div>
-                          <div className="cart-item-info">
-                            <h4>{item.name}</h4>
-                            <span className="cart-item-price">
-                              {formatPrice(item.price)} ر.س
-                            </span>
-                          </div>
-                          <div className="cart-item-controls">
-                            <div className="qty-controls">
-                              <button
-                                type="button"
-                                className="qty-btn"
-                                onClick={() => updateQuantity(item.id, -1)}
-                                aria-label="تقليل الكمية"
-                              >
-                                −
-                              </button>
-                              <span className="qty-value" aria-live="polite">
-                                {item.quantity}
+                      {items.map((item) => {
+                        const itemKey = item._key || item.id
+                        return (
+                          <li key={itemKey} className="cart-item">
+                            <div className="cart-item-img">
+                              <PremiumImage
+                                src={item.image}
+                                alt=""
+                                aspectRatio="1"
+                                wrapperClassName="cart-item-image-wrap"
+                              />
+                            </div>
+                            <div className="cart-item-info">
+                              <h4>{item.name}</h4>
+                              {item.selectedSize && (
+                                <span className="cart-item-size">{item.selectedSize}</span>
+                              )}
+                              <span className="cart-item-price">
+                                {formatPrice(item.price)} ر.س
+                              </span>
+                            </div>
+                            <div className="cart-item-controls">
+                              <div className="qty-controls">
+                                <button
+                                  type="button"
+                                  className="qty-btn"
+                                  onClick={() => updateQuantity(itemKey, -1)}
+                                  aria-label="تقليل الكمية"
+                                >
+                                  −
+                                </button>
+                                <span className="qty-value" aria-live="polite">
+                                  {item.quantity}
+                                </span>
+                                <button
+                                  type="button"
+                                  className="qty-btn"
+                                  onClick={() => updateQuantity(itemKey, 1)}
+                                  aria-label="زيادة الكمية"
+                                >
+                                  +
+                                </button>
+                              </div>
+                              <span className="cart-item-total">
+                                {formatPrice(item.price * item.quantity)} ر.س
                               </span>
                               <button
                                 type="button"
-                                className="qty-btn"
-                                onClick={() => updateQuantity(item.id, 1)}
-                                aria-label="زيادة الكمية"
+                                className="remove-btn"
+                                onClick={() => removeItem(itemKey)}
+                                aria-label={`حذف ${item.name}`}
                               >
-                                +
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                                  <polyline points="3 6 5 6 21 6" />
+                                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                </svg>
                               </button>
                             </div>
-                            <span className="cart-item-total">
-                              {formatPrice(item.price * item.quantity)} ر.س
-                            </span>
-                            <button
-                              type="button"
-                              className="remove-btn"
-                              onClick={() => removeItem(item.id)}
-                              aria-label={`حذف ${item.name}`}
-                            >
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                                <polyline points="3 6 5 6 21 6" />
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                              </svg>
-                            </button>
-                          </div>
-                        </li>
-                      ))}
+                          </li>
+                        )
+                      })}
                     </ul>
 
                     <div className="cart-footer">
@@ -406,14 +413,19 @@ export default function Cart() {
                     </div>
 
                     <div className="checkout-summary">
-                      {items.map((item) => (
-                        <div key={item.id} className="checkout-item">
-                          <span>
-                            {item.name} × {item.quantity}
-                          </span>
-                          <span>{formatPrice(item.price * item.quantity)} ر.س</span>
-                        </div>
-                      ))}
+                      {items.map((item) => {
+                        const itemKey = item._key || item.id
+                        return (
+                          <div key={itemKey} className="checkout-item">
+                            <span>
+                              {item.name}
+                              {item.selectedSize && <small> ({item.selectedSize})</small>}
+                              {' × '}{item.quantity}
+                            </span>
+                            <span>{formatPrice(item.price * item.quantity)} ر.س</span>
+                          </div>
+                        )
+                      })}
                       <div className="checkout-total">
                         <span>المجموع</span>
                         <span>{formatPrice(totalPrice)} ر.س</span>

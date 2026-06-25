@@ -1,202 +1,118 @@
 export const menuData = [
-  // ═══ شاي مغربي ═══
+  // ═══ مشروبات ساخنة 🍵 ═══
   {
     id: 1,
-    name: 'شاي الوازة',
-    nameEn: 'Wazza Tea',
-    description: 'شاي مغربي أصيل بنكهة الوازة الفريدة',
+    name: 'شاي الوردة',
+    nameEn: 'Rose Tea',
+    description: '',
     price: 4,
     category: 'hot',
-    image: '/images/tea.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 2,
     name: 'شاي السمار',
     nameEn: 'Sammar Tea',
-    description: 'شاي مغربي بنكهة السمار المميزة',
+    description: '',
     price: 4,
     category: 'hot',
-    image: '/images/tea.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 3,
-    name: 'شاي اليمان',
-    nameEn: 'Yaman Tea',
-    description: 'شاي يمني تقليدي بنكهة أصيلة',
+    name: 'شاي اليمام',
+    nameEn: 'Yamam Tea',
+    description: '',
     price: 4,
     category: 'hot',
-    image: '/images/tea.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 4,
-    name: 'شاي الربيع',
-    nameEn: 'Rabea Tea',
-    description: 'شاي الربيع المنعش بنكهات طبيعية',
+    name: 'شاي الربع',
+    nameEn: 'Rabba Tea',
+    description: '',
     price: 4,
     category: 'hot',
-    image: '/images/tea.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 5,
     name: 'شاي الزهور',
-    nameEn: 'Zohour Tea',
-    description: 'شاي بالزهور العطرية بنكهة فريدة',
+    nameEn: 'Flowers Tea',
+    description: '',
     price: 4,
     category: 'hot',
-    image: '/images/tea.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 6,
     name: 'كرك',
     nameEn: 'Karak',
-    description: 'كرك شاهي بالحليب والهيل والقرنفل',
+    description: '',
     price: 5,
     category: 'hot',
-    image: '/images/karak.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 7,
     name: 'حليب بالزنجبيل',
     nameEn: 'Ginger Milk',
-    description: 'حليب دافئ بالزنجبيل الطازج',
+    description: '',
     price: 5,
     category: 'hot',
-    image: '/images/tea.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 8,
-    name: 'كركدة',
-    nameEn: 'Karkadeh',
-    description: 'مشروب الكركدة الأحمر المنعش',
+    name: 'كركديجة',
+    nameEn: 'Karkadeja',
+    description: '',
     price: 4,
     category: 'hot',
-    image: '/images/tea.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 9,
     name: 'كمون',
     nameEn: 'Cumin Tea',
-    description: 'شاي الكمون للهضم والصحة',
+    description: '',
     price: 4,
     category: 'hot',
-    image: '/images/tea.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 10,
-    name: 'تنجيل بالليمون',
-    nameEn: 'Lemon Tangy',
-    description: 'تنجيل منعش بالليمون الطازج',
+    name: 'تجيبيل بالليمون',
+    nameEn: 'Tajibil with Lemon',
+    description: '',
     price: 4,
     category: 'hot',
-    image: '/images/tea.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 11,
-    name: 'قرناع',
-    nameEn: 'Qarna',
-    description: 'مشروب القرناع التقليدي',
+    name: 'متناج',
+    nameEn: 'Mutanaj',
+    description: '',
     price: 4,
     category: 'hot',
-    image: '/images/tea.png'
+    image: '/images/tea-default.png'
   },
   {
     id: 12,
-    name: 'ورجينا',
-    nameEn: 'Wargina',
-    description: 'مشروب ورجينا المغربي الأصيل',
+    name: 'وردجينا',
+    nameEn: 'Wardjina',
+    description: '',
     price: 4,
     category: 'hot',
-    image: '/images/tea.png'
-  },
-  // ═══ مشروبات ساخنة ═══
-  {
-    id: 13,
-    name: 'شاي أحمر',
-    nameEn: 'Red Tea',
-    description: 'شاي أحمر ساخن تقليدي',
-    price: 3,
-    category: 'hot',
-    image: '/images/tea.png'
-  },
-  {
-    id: 14,
-    name: 'شاي أخضر',
-    nameEn: 'Green Tea',
-    description: 'شاي أخضر طازج بالنعناع',
-    price: 3,
-    category: 'hot',
-    image: '/images/tea.png'
-  },
-  {
-    id: 15,
-    name: 'نسكافيه',
-    nameEn: 'Nescafe',
-    description: 'نسكافيه ساخن بالحليب',
-    price: 5,
-    category: 'hot',
-    image: '/images/tea.png'
-  },
-  {
-    id: 16,
-    name: 'هيل',
-    nameEn: 'Cardamom',
-    description: 'مشروب الهيل الدافئ',
-    price: 4,
-    category: 'hot',
-    image: '/images/tea.png'
-  },
-  // ═══ مشروبات باردة ═══
-  {
-    id: 17,
-    name: 'عصير ليمون بالنعناع',
-    nameEn: 'Lemon Mint',
-    description: 'عصير ليمون طازج بالنعناع',
-    price: 5,
-    category: 'cold',
-    image: '/images/lemon-mint.png'
-  },
-  {
-    id: 18,
-    name: 'موهيتو مانجو',
-    nameEn: 'Mango Mojito',
-    description: 'موهيتو مانجو منعش',
-    price: 6,
-    category: 'cold',
-    image: '/images/mango-mojito.png'
-  },
-  {
-    id: 19,
-    name: 'موهيتو توت',
-    nameEn: 'Berry Mojito',
-    description: 'موهيتو توت منعش',
-    price: 6,
-    category: 'cold',
-    image: '/images/berry-mojito.png'
-  },
-  {
-    id: 20,
-    name: 'ميلك شيك فراولة',
-    nameEn: 'Strawberry Milkshake',
-    description: 'ميلك شيك فراولة طازجة',
-    price: 7,
-    category: 'cold',
-    image: '/images/strawberry-shake.png'
-  },
-  {
-    id: 21,
-    name: 'ميلك شيك شوكولاتة',
-    nameEn: 'Chocolate Milkshake',
-    description: 'ميلك شيك شوكولاتة غنية',
-    price: 7,
-    category: 'cold',
-    image: '/images/chocolate-shake.png'
+    image: '/images/tea-default.png'
   },
 ]
 
 export const categories = [
   { id: 'all', name: 'الكل' },
-  { id: 'hot', name: 'شاي مغربي وساخن' },
-  { id: 'cold', name: 'مشروبات باردة' },
+  { id: 'hot', name: 'مشروبات ساخنة 🍵' },
 ]
 
 export const testimonials = [
@@ -204,7 +120,7 @@ export const testimonials = [
     id: 1,
     name: 'محمد العتيبي',
     rating: 5,
-    text: 'أفضل محل شاي في الرياض! الكرك عندهم شيء ثاني والأجواء تراثية جميلة.',
+    text: 'أفضل محل شاي في المنطقة! الكرك عندهم شيء ثاني والأجواء تراثية جميلة.',
     date: 'قبل شهر'
   },
   {
@@ -218,7 +134,7 @@ export const testimonials = [
     id: 3,
     name: 'عبدالله الدوسري',
     rating: 5,
-    text: 'شاي الوازة والكرك لازم تجربونهم! بدون شك أفضل شاي في المنطقة.',
+    text: 'شاي الوردة والكرك لازم تجربونهم! بدون شك أفضل شاي في المنطقة.',
     date: 'قبل ٣ أسابيع'
   },
   {
@@ -232,7 +148,7 @@ export const testimonials = [
     id: 5,
     name: 'فهد المالكي',
     rating: 5,
-    text: 'ورجينا وكركدة مشروبات لازم تجربونهم! محاصيل الشاي عندهم أصالة حقيقية.',
+    text: 'وردجينا وكركديجة مشروبات لازم تجربونهم! محاصيل الشاي عندهم أصالة حقيقية.',
     date: 'قبل شهر'
   }
 ]

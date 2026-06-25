@@ -33,8 +33,8 @@ export default function IconRenderer({ iconStr, size = 24, color = "currentColor
   if (iconStr.includes('cookie') || iconStr.includes('كوكيز')) {
     return <Cookie size={size} color={color} className={className} />
   }
-  if (iconStr.includes('bean') || iconStr.includes('بن')) {
-    return <Bean size={size} color={color} className={className} />
+  if (iconStr.includes('bean') || iconStr.includes('بن') || iconStr.includes('شاي') || iconStr.includes('🍵')) {
+    return <Coffee size={size} color={color} className={className} />
   }
   
   return <Utensils size={size} color={color} className={className} />

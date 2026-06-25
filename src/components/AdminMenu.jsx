@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { uploadImage } from '../lib/uploadImage'
 import { stripEmojis } from '../lib/utils'
+import { formatPrice } from '../lib/utils'
 import AdminModal from './ui/AdminModal'
+import { fetchSizesConfig, saveSizesConfig, clearSizesCache } from '../lib/sizesStore'
 
 const EMPTY_FORM = {
   name: '',
@@ -22,6 +24,9 @@ export default function AdminMenu() {
   const [uploading, setUploading] = useState(false)
   const [editingItem, setEditingItem] = useState(null)
   const [formData, setFormData] = useState(EMPTY_FORM)
+  const [sizesConfig, setSizesConfig] = useState({})
+  const [editingSizes, setEditingSizes] = useState(null)
+  const [sizesForm, setSizesForm] = useState([])
 
   const fetchData = async () => {
     setLoading(true)
@@ -33,6 +38,9 @@ export default function AdminMenu() {
       setItems(itemsRes.data.filter((item) => !item.category.startsWith('__')))
     }
     if (catsRes.data) setCategories(catsRes.data)
+
+    const sizes = await fetchSizesConfig()
+    setSizesConfig(sizes)
     setLoading(false)
   }
 
@@ -143,6 +151,46 @@ export default function AdminMenu() {
     })
   }
 
+  const openSizesEditor = (item) => {
+    setEditingSizes(item.name)
+    const existing = sizesConfig[item.name] || []
+    setSizesForm(existing.length > 0 ? [...existing] : [
+      { name: 'كوب صغير', price: item.price },
+      { name: 'كوب كبير', price: item.price + 2 },
+    ])
+  }
+
+  const addSize = () => {
+    setSizesForm([...sizesForm, { name: '', price: 0 }])
+  }
+
+  const updateSize = (index, field, value) => {
+    const updated = sizesForm.map((s, i) =>
+      i === index ? { ...s, [field]: field === 'price' ? Number(value) || 0 : value } : s
+    )
+    setSizesForm(updated)
+  }
+
+  const removeSize = (index) => {
+    setSizesForm(sizesForm.filter((_, i) => i !== index))
+  }
+
+  const saveSizes = async () => {
+    const validSizes = sizesForm.filter((s) => s.name.trim())
+    const updated = { ...sizesConfig }
+
+    if (validSizes.length > 0) {
+      updated[editingSizes] = validSizes
+    } else {
+      delete updated[editingSizes]
+    }
+
+    await saveSizesConfig(updated)
+    setSizesConfig(updated)
+    clearSizesCache()
+    setEditingSizes(null)
+  }
+
   if (loading) {
     return <div className="settings-loading"><div className="admin-spinner"></div><p>جاري تحميل المنيو...</p></div>
   }
@@ -157,6 +205,7 @@ export default function AdminMenu() {
         </button>
       </div>
 
+      {/* نموذج تعديل/إضافة صنف */}
       <AdminModal
         open={Boolean(editingItem)}
         onClose={() => setEditingItem(null)}
@@ -170,7 +219,7 @@ export default function AdminMenu() {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="مثال: لاتيه مانتشا"
+              placeholder="مثال: شاي الوردة"
             />
           </div>
           <div className="form-group">
@@ -181,7 +230,7 @@ export default function AdminMenu() {
               dir="ltr"
               value={formData.name_en}
               onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
-              placeholder="e.g. Matcha Latte"
+              placeholder="e.g. Rose Tea"
             />
           </div>
           <div className="form-group">
@@ -195,7 +244,7 @@ export default function AdminMenu() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
             <div className="form-group">
-              <label>السعر (ر.س)</label>
+              <label>السعر الأساسي (ر.س)</label>
               <input
                 required
                 type="number"
@@ -232,7 +281,6 @@ export default function AdminMenu() {
             </div>
           </div>
 
-          {/* قسم رفع الصورة */}
           <div className="form-group">
             <label>صورة المنتج</label>
             <div className="modal-image-section">
@@ -266,6 +314,57 @@ export default function AdminMenu() {
         </form>
       </AdminModal>
 
+      {/* نموذج تعديل الأحجام */}
+      <AdminModal
+        open={Boolean(editingSizes)}
+        onClose={() => setEditingSizes(null)}
+        title={`أحجام "${editingSizes}"`}
+      >
+        <div className="sizes-editor">
+          <p className="sizes-editor__hint">حدد أحجام الكوب وأسعارها لهذا الصنف</p>
+          {sizesForm.map((size, index) => (
+            <div key={index} className="sizes-editor__row">
+              <input
+                type="text"
+                value={size.name}
+                onChange={(e) => updateSize(index, 'name', e.target.value)}
+                placeholder="اسم الحجم (مثل: كوب صغير)"
+                className="sizes-editor__name"
+              />
+              <input
+                type="number"
+                step="0.5"
+                min="0"
+                value={size.price || ''}
+                onChange={(e) => updateSize(index, 'price', e.target.value)}
+                placeholder="السعر"
+                className="sizes-editor__price"
+              />
+              <span className="sizes-editor__currency">ر.س</span>
+              <button
+                type="button"
+                className="sizes-editor__remove"
+                onClick={() => removeSize(index)}
+                aria-label="حذف الحجم"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <button type="button" className="sizes-editor__add" onClick={addSize}>
+            + أضف حجم جديد
+          </button>
+          <div className="form-actions" style={{ marginTop: '16px' }}>
+            <button type="button" onClick={() => setEditingSizes(null)} className="cancel-btn">
+              إلغاء
+            </button>
+            <button type="button" onClick={saveSizes} className="save-btn">
+              حفظ الأحجام
+            </button>
+          </div>
+        </div>
+      </AdminModal>
+
       <div style={{ overflowX: 'auto', width: '100%' }}>
         <table className="admin-menu-table">
           <thead>
@@ -273,39 +372,55 @@ export default function AdminMenu() {
               <th style={{ width: '70px' }}>الصورة</th>
               <th>الاسم</th>
               <th>القسم</th>
-              <th>السعر</th>
-              <th style={{ width: '150px' }}>الإجراءات</th>
+              <th>السعر الأساسي</th>
+              <th>الأحجام</th>
+              <th style={{ width: '200px' }}>الإجراءات</th>
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
-              <tr key={item.id}>
-                <td>
-                  {item.image ? (
-                    <img src={item.image} alt="" className="admin-table-thumb" />
-                  ) : (
-                    <div style={{ width: 56, height: 56, borderRadius: 10, background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            {items.map((item) => {
+              const itemSizes = sizesConfig[item.name]
+              return (
+                <tr key={item.id}>
+                  <td>
+                    {item.image ? (
+                      <img src={item.image} alt="" className="admin-table-thumb" />
+                    ) : (
+                      <div style={{ width: 56, height: 56, borderRadius: 10, background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    <span className="item-name">{item.name}</span>
+                    <span className="item-name-en">{item.name_en}</span>
+                  </td>
+                  <td><span className="item-category">{stripEmojis(item.category)}</span></td>
+                  <td><span className="item-price">{item.price} ر.س</span></td>
+                  <td>
+                    {itemSizes ? (
+                      <span className="item-sizes-badge">
+                        {itemSizes.map((s) => `${s.name} ${s.price}`).join(' | ')}
+                      </span>
+                    ) : (
+                      <span className="item-sizes-empty">—</span>
+                    )}
+                  </td>
+                  <td>
+                    <div className="item-actions">
+                      <button type="button" onClick={() => openSizesEditor(item)} className="edit-btn" style={{ background: 'var(--green-700, #2d6a4f)', color: '#fff', border: 'none' }}>
+                        الأحجام
+                      </button>
+                      <button type="button" onClick={() => handleEdit(item)} className="edit-btn">تعديل</button>
+                      <button type="button" onClick={() => handleDelete(item.id)} className="delete-btn">حذف</button>
                     </div>
-                  )}
-                </td>
-                <td>
-                  <span className="item-name">{item.name}</span>
-                  <span className="item-name-en">{item.name_en}</span>
-                </td>
-                <td><span className="item-category">{stripEmojis(item.category)}</span></td>
-                <td><span className="item-price">{item.price} ر.س</span></td>
-                <td>
-                  <div className="item-actions">
-                    <button type="button" onClick={() => handleEdit(item)} className="edit-btn">تعديل</button>
-                    <button type="button" onClick={() => handleDelete(item.id)} className="delete-btn">حذف</button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              )
+            })}
             {items.length === 0 && (
               <tr>
-                <td colSpan="5" className="admin-menu-empty">
+                <td colSpan="6" className="admin-menu-empty">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                   <p>لا توجد عناصر في المنيو بعد</p>
                   <button type="button" onClick={startNew} className="settings-btn-primary" style={{ margin: '0 auto' }}>
