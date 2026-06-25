@@ -5756,31 +5756,19 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 2;
 }
 
-.splash-logo {
-  color: #c4a035;
+.splash-logo-img {
   animation: splashPulse 2s ease-in-out infinite;
+}
+
+.splash-logo-img img {
+  width: 200px;
+  height: auto;
+  filter: drop-shadow(0 4px 30px rgba(196, 160, 53, 0.25));
 }
 
 @keyframes splashPulse {
   0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.85; }
-}
-
-.splash-title {
-  font-family: var(--font-arabic);
-  font-size: 2.2rem;
-  font-weight: 900;
-  color: #c4a035;
-  margin: 0;
-  letter-spacing: 0.02em;
-  text-shadow: 0 2px 20px rgba(196, 160, 53, 0.3);
-}
-
-.splash-subtitle {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.5);
-  margin: 0;
-  font-weight: 400;
+  50% { transform: scale(1.03); opacity: 0.9; }
 }
 
 .splash-progress-bar {
