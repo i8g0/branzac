@@ -7,31 +7,31 @@
 
 /* ─── CSS Custom Properties (Design Tokens) ────────────────── */
 :root {
-  /* Greens — Earth Palette (oklch) */
-  --green-900: oklch(22% 0.05 150);
-  --green-800: oklch(28% 0.06 150);
-  --green-700: oklch(34% 0.07 150);
-  --green-600: oklch(42% 0.08 150);
-  --green-500: oklch(48% 0.09 150);
+  /* Tea Greens — Leaf Palette */
+  --green-900: oklch(25% 0.06 145);
+  --green-800: oklch(30% 0.07 145);
+  --green-700: oklch(36% 0.08 145);
+  --green-600: oklch(44% 0.09 145);
+  --green-500: oklch(50% 0.10 145);
 
-  /* Golds — Accent Palette (oklch) */
-  --gold: oklch(75% 0.12 85);
-  --gold-light: oklch(82% 0.11 85);
-  --gold-dark: oklch(68% 0.13 85);
+  /* Tea Brew — Warm Amber Palette */
+  --gold: oklch(72% 0.10 75);
+  --gold-light: oklch(80% 0.09 75);
+  --gold-dark: oklch(64% 0.11 75);
   --gold-gradient: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
   --gold-shimmer: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold), var(--gold-dark));
 
-  /* Neutrals (oklch) */
-  --beige: oklch(95% 0.02 85);
-  --beige-dark: oklch(91% 0.03 85);
-  --cream: oklch(98% 0.01 85);
+  /* Neutrals — Warm Linen */
+  --beige: oklch(96% 0.015 75);
+  --beige-dark: oklch(92% 0.02 75);
+  --cream: oklch(98% 0.01 80);
   --white: oklch(100% 0 0);
-  --black: oklch(10% 0 0);
+  --black: oklch(12% 0 0);
 
-  /* Text (oklch) */
-  --text-primary: oklch(18% 0.01 150);
-  --text-secondary: oklch(42% 0.02 150);
-  --text-light: oklch(58% 0.02 150);
+  /* Text — Warm Brown */
+  --text-primary: oklch(20% 0.02 60);
+  --text-secondary: oklch(40% 0.02 60);
+  --text-light: oklch(55% 0.02 60);
 
   /* Motion — spring-friendly durations */
   --spring-snappy: 0.45s cubic-bezier(0.34, 1.2, 0.64, 1);
@@ -503,10 +503,10 @@ h1, h2, h3, h4, h5, h6 {
   inset: 0;
   background: linear-gradient(
     180deg,
-    oklch(12% 0.03 150 / 0.75) 0%,
-    oklch(12% 0.03 150 / 0.5) 40%,
-    oklch(12% 0.03 150 / 0.65) 70%,
-    oklch(12% 0.03 150 / 0.95) 100%
+    oklch(15% 0.04 145 / 0.75) 0%,
+    oklch(15% 0.04 145 / 0.5) 40%,
+    oklch(15% 0.04 145 / 0.65) 70%,
+    oklch(15% 0.04 145 / 0.95) 100%
   );
   z-index: 1;
 }
@@ -862,7 +862,7 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
   
   /* Mask gradient to fade the edges on scroll */
-  mask-image: linear-gradient(to left, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  background: linear-gradient(to left, transparent 0%, #000 8%, #000 92%, transparent 100%);
   -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 8%, #000 92%, transparent 100%);
 }
 
@@ -2682,8 +2682,8 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  background: #faf5f0;
-  color: #8b6914;
+  background: #f5f0e0;
+  color: #7a6020;
   padding: 3px 8px;
   border-radius: 6px;
   font-size: 0.72rem;
@@ -2695,8 +2695,8 @@ h1, h2, h3, h4, h5, h6 {
 .card-calories svg {
   width: 12px;
   height: 12px;
-  color: #c8a44e;
-  fill: #c8a44e;
+  color: #b89435;
+  fill: #b89435;
   stroke: none;
 }
 
@@ -4050,7 +4050,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 800;
   color: var(--green-900);
   margin-bottom: 10px;
-  background: #fbf5e6;
+  background: #f8f4e8;
   padding: 4px 12px;
   border-radius: 6px;
   display: inline-block;
@@ -4079,11 +4079,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .admin-card-notes {
-  background: #fff9e6;
+  background: #fefae8;
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 0.82rem;
-  color: #856404;
+  color: #6b5a10;
   margin-bottom: 8px;
 }
 
@@ -4729,7 +4729,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .admin-search-container:focus-within {
   background: rgba(255, 255, 255, 0.15);
-  border-color: var(--gold, #c9a96e);
+  border-color: var(--gold, #c4a035);
   box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.25);
   transform: translateY(-1px);
 }
@@ -5507,14 +5507,14 @@ h1, h2, h3, h4, h5, h6 {
 .checkout-header h3 {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #2c1810;
+  color: #2d3a20;
   margin: 0;
 }
 
 .checkout-amount {
   font-size: 1.3rem;
   font-weight: 800;
-  color: #c9a96e;
+  color: #c4a035;
 }
 
 .checkout-form {
@@ -5526,7 +5526,7 @@ h1, h2, h3, h4, h5, h6 {
 .checkout-pay-btn {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #c9a96e, #b8933a);
+  background: linear-gradient(135deg, #c4a035, #a88a2a);
   color: white;
   border: none;
   border-radius: 12px;
@@ -5576,7 +5576,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .checkout-error-box button {
   padding: 10px 24px;
-  background: #c9a96e;
+  background: #c4a035;
   color: white;
   border: none;
   border-radius: 8px;
@@ -5598,7 +5598,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 28px;
   height: 28px;
   border: 3px solid #e5e7eb;
-  border-top-color: #c9a96e;
+  border-top-color: #c4a035;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -5622,7 +5622,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .stp-methodItem[data-type="apple_pay"]:hover {
-  border-color: #c9a96e;
+  border-color: #c4a035;
 }
 
 @keyframes spin {
@@ -5648,7 +5648,7 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   font-size: 0.9rem;
   font-weight: 700;
-  color: #2c1810;
+  color: #2d3a20;
   margin-bottom: 10px;
 }
 
@@ -5679,8 +5679,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .payment-method-btn--active {
-  background: #2c1810;
-  border-color: #2c1810;
+  background: #2d3a20;
+  border-color: #2d3a20;
   color: white;
 }
 
@@ -5700,7 +5700,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .payment-method-btn--active svg {
-  color: #c9a96e;
+  color: #c4a035;
 }
 
 /* MyFatoorah embedded payment */

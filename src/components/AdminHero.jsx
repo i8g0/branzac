@@ -246,7 +246,7 @@ export default function AdminHero() {
         </div>
         <div className="settings-section-body">
           <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: 20, alignItems: 'start', marginBottom: 16 }}>
-            <img src={aboutData?.image || '/images/cafe-interior.png'} alt="" style={{ width: '100%', height: 100, borderRadius: 10, objectFit: 'cover' }} />
+            <img src={aboutData?.image || '/images/tea-shop.png'} alt="" style={{ width: '100%', height: 100, borderRadius: 10, objectFit: 'cover' }} />
             <div>
               <h4 style={{ margin: '0 0 8px', fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 700 }}>{aboutData?.name || 'شغفنا بالشاي المغربي الأصيل'}</h4>
               <p style={{ margin: 0, color: 'var(--text-light)', fontSize: '0.88rem', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{aboutData?.description || 'لا يوجد وصف مخصص.'}</p>

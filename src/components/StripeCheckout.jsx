@@ -112,9 +112,9 @@ export default function StripeCheckout({ amount, items = [], orderId, onSuccess,
           appearance: {
             theme: 'stripe',
             variables: {
-              colorPrimary: '#c9a96e',
+              colorPrimary: '#c4a035',
               colorBackground: '#ffffff',
-              colorText: '#2c1810',
+              colorText: '#2d3a20',
               borderRadius: '12px',
             },
           },
