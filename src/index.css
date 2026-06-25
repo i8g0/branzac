@@ -5726,3 +5726,106 @@ h1, h2, h3, h4, h5, h6 {
   background: #fafafa;
   min-height: 60px;
 }
+
+/* ========================================
+   Splash Screen
+   ======================================== */
+
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #1a2e1a 0%, #2d3a20 40%, #1a2e1a 100%);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.splash-screen.splash-fade-out {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  z-index: 2;
+}
+
+.splash-logo {
+  color: #c4a035;
+  animation: splashPulse 2s ease-in-out infinite;
+}
+
+@keyframes splashPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.85; }
+}
+
+.splash-title {
+  font-family: var(--font-arabic);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #c4a035;
+  margin: 0;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 20px rgba(196, 160, 53, 0.3);
+}
+
+.splash-subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  font-weight: 400;
+}
+
+.splash-progress-bar {
+  width: 180px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.splash-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #a88a2a, #c4a035, #d4b84a);
+  border-radius: 10px;
+  transition: width 0.15s ease;
+}
+
+.splash-loading-text {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0;
+}
+
+.splash-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.splash-particle {
+  position: absolute;
+  bottom: -10px;
+  left: var(--x);
+  width: 4px;
+  height: 4px;
+  background: rgba(196, 160, 53, 0.25);
+  border-radius: 50%;
+  animation: splashFloat var(--duration) var(--delay) ease-in infinite;
+}
+
+@keyframes splashFloat {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  20% { opacity: 0.6; }
+  80% { opacity: 0.2; }
+  100% { transform: translateY(-100vh) scale(0); opacity: 0; }
+}
