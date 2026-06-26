@@ -1098,7 +1098,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .size-btn--active .size-btn__price {
-  color: var(--gold-light);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .menu-card-footer {
