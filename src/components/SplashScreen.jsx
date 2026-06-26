@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 
+const CACHE_BUST = Date.now()
+
 export default function SplashScreen({ onComplete }) {
   const [progress, setProgress] = useState(0)
   const [fadeOut, setFadeOut] = useState(false)
@@ -24,11 +26,11 @@ export default function SplashScreen({ onComplete }) {
     <div className={`splash-screen ${fadeOut ? 'splash-fade-out' : ''}`}>
       <div className="splash-content">
         <div className="splash-logo-img">
-          <img src="/images/logo-transparent.png" alt="" width={160} height={160} />
+          <img src={`/images/logo-transparent.png?v=${CACHE_BUST}`} alt="" width={160} height={160} />
         </div>
 
         <div className="splash-brand-text">
-          <img src="/images/logo-bg.png" alt="محاصيل الشاي" />
+          <img src={`/images/logo-bg.png?v=${CACHE_BUST}`} alt="محاصيل الشاي" />
         </div>
 
         <div className="splash-progress-bar">
