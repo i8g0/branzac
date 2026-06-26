@@ -858,18 +858,15 @@ h1, h2, h3, h4, h5, h6 {
   z-index: var(--z-sticky);
   width: 100%;
   max-width: 100%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.75));
+  background: rgba(255, 255, 255, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.55);
   backdrop-filter: saturate(180%) blur(22px);
+  -webkit-backdrop-filter: saturate(180%) blur(22px);
   border-radius: var(--radius-xl);
   box-shadow: 0 20px 44px rgba(12, 18, 28, 0.12);
   min-height: 64px;
   align-content: center;
   overflow: hidden;
-  
-  /* Mask gradient to fade the edges on scroll */
-  background: linear-gradient(to left, transparent 0%, #000 8%, #000 92%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 8%, #000 92%, transparent 100%);
 }
 
 .menu-tab-highlight {
