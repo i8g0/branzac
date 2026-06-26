@@ -8,10 +8,7 @@ const DEFAULT_SETTINGS = {
   site_name_en: 'Mahaseel Tea',
   logo_light_url: '/images/logo-transparent.png',
   logo_dark_url: '/images/logo-bg.png',
-  favicon_url: '/favicon.ico',
   font_family: 'Tajawal',
-
-  // Full brand identity colors
   primary_color: DEFAULT_PRESET.primary,
   secondary_color: DEFAULT_PRESET.secondary,
   accent_color: DEFAULT_PRESET.accent,
@@ -22,92 +19,115 @@ const DEFAULT_SETTINGS = {
   navbar_color: DEFAULT_PRESET.navbar,
   sidebar_color: DEFAULT_PRESET.sidebar,
   card_color: DEFAULT_PRESET.card,
-
-  // Legacy / fallback
-  background_color: '#f5f0e8',
-  surface_color: '#ffffff',
-  text_base_color: '#1a1a2e',
-
-  // Content
   hero_title: 'حيث تلتقي أصالة الشاي بالتجربة الاستثنائية',
-  hero_subtitle: 'مرحباً بكم في',
-  hero_tagline: 'استمتع بتشكيلة فريدة من الشاي المغربي',
   footer_text: 'نقدّم لكم أجود أنواع الشاي المغربي والكرك في أجواء تراثية دافئة.',
-  social_links: {},
-
-  // UI Flags
-  is_hero_image_enabled: true,
-  layout_style: 'default',
   theme_preset: 'forest',
 }
 
 let cachedSettings = null
+
+// Only these columns exist in the DB
+const DB_COLUMNS = [
+  'id', 'site_name', 'site_name_en', 'logo_light_url', 'logo_dark_url', 'font_family',
+  'primary_color', 'secondary_color', 'accent_color',
+  'success_color', 'warning_color', 'danger_color', 'info_color',
+  'navbar_color', 'sidebar_color', 'card_color',
+  'hero_title', 'footer_text', 'theme_preset',
+  'created_at', 'updated_at',
+]
 
 export async function fetchSiteSettings() {
   try {
     const { data, error } = await supabase
       .from('site_settings')
       .select('*')
-      .order('updated_at', { ascending: false })
       .limit(1)
       .maybeSingle()
 
     if (error) {
-      console.warn('Failed to fetch site settings, using defaults:', error.message)
+      console.warn('Fetch settings error:', error.message)
       return { ...DEFAULT_SETTINGS }
     }
+    if (!data) return { ...DEFAULT_SETTINGS }
 
     cachedSettings = { ...DEFAULT_SETTINGS, ...data }
     return cachedSettings
   } catch (e) {
-    console.warn('Settings fetch error:', e)
+    console.warn('Settings fetch failed:', e)
     return { ...DEFAULT_SETTINGS }
   }
 }
 
 export async function updateSiteSettings(updates) {
+  // Only send known columns
+  const payload = {}
+  for (const key of DB_COLUMNS) {
+    if (key === 'id' || key === 'created_at') continue
+    if (updates[key] !== undefined) {
+      payload[key] = updates[key]
+    }
+  }
+  payload.updated_at = new Date().toISOString()
+
+  console.log('Saving settings:', payload)
+
   try {
-    const { data: existing } = await supabase
+    // Get existing row
+    const { data: existing, error: fetchErr } = await supabase
       .from('site_settings')
       .select('id')
       .limit(1)
       .maybeSingle()
 
+    if (fetchErr) {
+      console.error('Fetch existing error:', fetchErr)
+      throw fetchErr
+    }
+
+    let result
+
     if (existing) {
+      // Update existing row
       const { data, error } = await supabase
         .from('site_settings')
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        .update(payload)
         .eq('id', existing.id)
         .select()
         .single()
 
-      if (error) throw error
-      cachedSettings = { ...DEFAULT_SETTINGS, ...data }
+      if (error) {
+        console.error('Update error:', error)
+        throw error
+      }
+      result = data
+      console.log('Updated successfully:', result)
     } else {
+      // Insert new row
       const { data, error } = await supabase
         .from('site_settings')
-        .insert({ ...DEFAULT_SETTINGS, ...updates })
+        .insert({ ...DEFAULT_SETTINGS, ...payload })
         .select()
         .single()
 
-      if (error) throw error
-      cachedSettings = { ...DEFAULT_SETTINGS, ...data }
+      if (error) {
+        console.error('Insert error:', error)
+        throw error
+      }
+      result = data
+      console.log('Inserted successfully:', result)
     }
 
+    cachedSettings = { ...DEFAULT_SETTINGS, ...result }
     applyTheme(cachedSettings)
     return cachedSettings
   } catch (e) {
-    console.error('Failed to update settings:', e)
+    console.error('Save failed:', e)
     throw e
   }
 }
 
-/**
- * Build a full palette object from settings, falling back to preset defaults.
- */
 function buildPaletteFromSettings(settings) {
   const preset = THEME_PRESETS[settings.theme_preset] || DEFAULT_PRESET
-
   return {
     primary: settings.primary_color || preset.primary,
     secondary: settings.secondary_color || preset.secondary,
@@ -128,7 +148,6 @@ export function applyTheme(settings) {
   applyPaletteToDocument(palette)
 
   if (settings.font_family) {
-    document.documentElement.style.setProperty('--font-family', settings.font_family)
     document.body.style.fontFamily = `'${settings.font_family}', sans-serif`
   }
 }

@@ -38,7 +38,6 @@ const useThemeStore = create((set, get) => ({
     const settings = { ...get().settings, [key]: value }
     set({ settings })
 
-    // Live preview: regenerate palette if any color changed
     if (COLOR_FIELDS.includes(key) || key === 'theme_preset') {
       const colors = buildPaletteFromSettings(settings)
       const palette = generatePalette(colors)
@@ -47,7 +46,7 @@ const useThemeStore = create((set, get) => ({
     }
   },
 
-  applyPreset: (presetKey) => {
+  applyPreset: async (presetKey) => {
     const preset = THEME_PRESETS[presetKey]
     if (!preset) return
 
@@ -66,10 +65,19 @@ const useThemeStore = create((set, get) => ({
       theme_preset: presetKey,
     }
 
+    // Apply locally first for instant feedback
     const colors = buildPaletteFromSettings(settings)
     const palette = generatePalette(colors)
     applyPaletteToDocument(palette)
     set({ settings, palette })
+
+    // Save to DB
+    try {
+      await updateSiteSettings(settings)
+      try { localStorage.setItem('site_settings_cache', JSON.stringify(settings)) } catch(e) {}
+    } catch (e) {
+      console.error('Failed to save preset:', e)
+    }
   },
 
   saveSettings: async () => {
@@ -86,12 +94,17 @@ const useThemeStore = create((set, get) => ({
     }
   },
 
-  resetToDefaults: () => {
+  resetToDefaults: async () => {
     const settings = { ...DEFAULT_SETTINGS }
     const colors = buildPaletteFromSettings(settings)
     const palette = generatePalette(colors)
     applyPaletteToDocument(palette)
     set({ settings, palette })
+    try {
+      await updateSiteSettings(settings)
+    } catch (e) {
+      console.error('Failed to reset:', e)
+    }
   },
 }))
 
