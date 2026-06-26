@@ -128,3 +128,5 @@ check-result.json
 # macOS system files
 .DS_Store
 Thumbs.db
+
+.vercel
