@@ -13,6 +13,7 @@
   --green-700: oklch(34% 0.09 155);
   --green-600: oklch(42% 0.10 155);
   --green-500: oklch(50% 0.11 155);
+  --green-50: oklch(96% 0.02 155);
 
   /* Tea Brew — Warm Stone Accent (replacing brass/gold) */
   --gold: oklch(68% 0.08 85);
@@ -1075,19 +1076,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .size-btn--active {
   border-color: var(--green-700);
-  background: var(--green-900);
-  color: var(--white);
+  background: var(--green-50);
 }
 
 .size-btn__name {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--green-900);
   transition: color 0.2s ease;
-}
-
-.size-btn--active .size-btn__name {
-  color: var(--white);
 }
 
 .size-btn__price {
@@ -1095,10 +1091,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: var(--green-700);
   transition: color 0.2s ease;
-}
-
-.size-btn--active .size-btn__price {
-  color: rgba(255, 255, 255, 0.85);
 }
 
 .menu-card-footer {
