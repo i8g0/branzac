@@ -519,18 +519,18 @@ h1, h2, h3, h4, h5, h6 {
 .hero-content.static-content {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  left: 8%;
+  transform: translateY(-50%);
   z-index: 5;
   width: 100%;
-  max-width: 800px;
+  max-width: 680px;
   padding: 0 var(--space-xl);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  text-align: center;
-  pointer-events: auto; /* Ensures links and buttons remain clickable */
+  text-align: right;
+  pointer-events: auto;
 }
 
 /* Premium Stagger Animations on Page Load */
@@ -584,7 +584,7 @@ h1, h2, h3, h4, h5, h6 {
 .hero-logo {
   margin-bottom: -10px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -955,8 +955,20 @@ h1, h2, h3, h4, h5, h6 {
 
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-xl);
+}
+
+@media (max-width: 1024px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Menu Card */
@@ -1420,11 +1432,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .testimonial-text {
-  font-size: 1rem;
-  line-height: 1.9;
+  font-size: 0.95rem;
+  line-height: 1.7;
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: var(--space-lg);
   font-style: italic;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .testimonial-author {
@@ -2424,7 +2440,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .menu-grid {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -2495,6 +2511,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   /* Hero */
+  .hero-content.static-content {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    align-items: center;
+    text-align: center;
+  }
+
   .hero h1 {
     font-size: clamp(2.2rem, 8vw, 3.5rem);
   }
@@ -2534,7 +2557,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .menu-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: 1fr;
     gap: var(--space-lg);
   }
 
