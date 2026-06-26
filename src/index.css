@@ -520,7 +520,7 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   top: 50%;
   left: 8%;
-  transform: translateY(-50%);
+  transform: translateY(calc(-50% + var(--parallax-y, 0px)));
   z-index: 5;
   width: 100%;
   max-width: 680px;
@@ -579,6 +579,8 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--beige);
   font-weight: 300;
   margin-bottom: -15px;
+  text-align: right;
+  width: 100%;
 }
 
 .hero-logo {
@@ -586,6 +588,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  width: 100%;
 }
 
 .hero-logo-img {
@@ -610,6 +613,8 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: -10px;
   margin-bottom: var(--space-2xl);
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  text-align: right;
+  width: 100%;
 }
 
 .hero .cta-btn {
@@ -2513,7 +2518,7 @@ h1, h2, h3, h4, h5, h6 {
   /* Hero */
   .hero-content.static-content {
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, calc(-50% + var(--parallax-y, 0px)));
     align-items: center;
     text-align: center;
   }
@@ -2751,7 +2756,7 @@ h1, h2, h3, h4, h5, h6 {
 .hero-buttons {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--space-lg);
   flex-wrap: wrap;
 }
