@@ -1020,10 +1020,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .menu-card-body {
-  padding: var(--space-lg);
+  padding: var(--space-lg) var(--space-lg) var(--space-xl);
   display: flex;
   flex-direction: column;
   flex: 1;
+  gap: 0;
 }
 
 .menu-card-body h3 {
@@ -1100,17 +1101,12 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--gold-light);
 }
 
-.size-btn__price {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--green-700, #2d6a4f);
-}
-
 .menu-card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: auto;
+  padding-top: var(--space-sm);
 }
 
 .menu-card .price {
