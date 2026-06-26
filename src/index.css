@@ -7,32 +7,43 @@
 
 /* ─── CSS Custom Properties (Design Tokens) ────────────────── */
 :root {
-  /* Tea Greens — Deep Forest Palette (overridden by dynamic theme) */
-  --green-900: var(--color-primary-900, oklch(22% 0.06 155));
-  --green-800: var(--color-primary-800, oklch(28% 0.07 155));
-  --green-700: var(--color-primary-700, oklch(34% 0.09 155));
-  --green-600: var(--color-primary-600, oklch(42% 0.10 155));
-  --green-500: var(--color-primary-500, oklch(50% 0.11 155));
-  --green-50: var(--color-primary-50, oklch(96% 0.02 155));
+  /* Brand Colors — dynamically overridden by theme system */
+  --green-900: var(--color-primary-900, #1a2e1a);
+  --green-800: var(--color-primary-800, #2d3a20);
+  --green-700: var(--color-primary-700, #2d6a4f);
+  --green-600: var(--color-primary-600, #40916c);
+  --green-500: var(--color-primary-500, #52b788);
+  --green-50: var(--color-primary-50, #d8f3dc);
 
-  /* Tea Brew — Warm Stone Accent (replacing brass/gold) */
-  --gold: var(--color-secondary-500, oklch(68% 0.08 85));
-  --gold-light: var(--color-secondary-400, oklch(78% 0.07 85));
-  --gold-dark: var(--color-secondary-600, oklch(58% 0.09 85));
-  --gold-gradient: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+  /* Accent / Gold */
+  --gold: var(--color-secondary-500, #8a7850);
+  --gold-light: var(--color-secondary-400, #a09070);
+  --gold-dark: var(--color-secondary-600, #706040);
+  --gold-gradient: linear-gradient(135deg, var(--color-accent-600, #b8942a), var(--color-accent-500, #d4a843), var(--color-accent-400, #e0bc60));
   --gold-shimmer: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold), var(--gold-dark));
 
-  /* Neutrals — Cool Bone (replacing warm linen) */
-  --beige: var(--bg-base, oklch(95% 0.008 200));
-  --beige-dark: var(--color-primary-100, oklch(90% 0.01 200));
-  --cream: var(--bg-surface, oklch(97% 0.005 210));
-  --white: var(--bg-surface, oklch(100% 0 0));
-  --black: var(--color-primary-900, oklch(14% 0.01 155));
+  /* Neutrals */
+  --beige: var(--color-bg-base, #f5f0e8);
+  --beige-dark: var(--color-primary-100, #e8e0d4);
+  --cream: var(--color-bg-surface, #ffffff);
+  --white: var(--color-bg-surface, #ffffff);
+  --black: var(--color-primary-900, #1a1a2e);
 
-  /* Text — Cool Charcoal */
-  --text-primary: var(--text-primary, oklch(18% 0.015 155));
-  --text-secondary: var(--text-secondary, oklch(38% 0.015 155));
-  --text-light: var(--text-muted, oklch(52% 0.015 155));
+  /* Text */
+  --text-primary: var(--color-text-primary, #1a1a2e);
+  --text-secondary: var(--color-text-secondary, #4a4a5e);
+  --text-light: var(--color-text-muted, #8a8a9e);
+
+  /* Navbar */
+  --navbar-bg: var(--color-navbar-800, #1a2e1a);
+
+  /* Button tokens */
+  --btn-primary-bg: var(--color-primary-700, #2d6a4f);
+  --btn-primary-hover: var(--color-primary-800, #1e4d35);
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: var(--color-secondary-500, #8a7850);
+  --btn-secondary-hover: var(--color-secondary-600, #706040);
+  --btn-secondary-text: #ffffff;
 
   /* Motion — spring-friendly durations */
   --spring-snappy: 0.45s cubic-bezier(0.34, 1.2, 0.64, 1);
@@ -252,19 +263,19 @@ h1, h2, h3, h4, h5, h6 {
   right: 0;
   height: var(--navbar-height);
   z-index: var(--z-navbar);
-  background: oklch(10% 0 0 / 0.85);
+  background: var(--navbar-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid oklch(75% 0.12 85 / 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   transition: all var(--transition-base);
   display: flex;
   align-items: center;
 }
 
 .navbar.scrolled {
-  background: oklch(10% 0 0 / 0.95);
+  background: var(--navbar-bg);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
-  border-bottom-color: oklch(75% 0.12 85 / 0.15);
+  border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
 .navbar .container {
@@ -300,14 +311,14 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-size: 1.6rem;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--color-accent-400, #d4a843);
   letter-spacing: 1px;
 }
 
 .navbar-logo .logo-text-ar {
   font-family: var(--font-arabic);
   font-size: 0.85rem;
-  color: oklch(75% 0.12 85 / 0.7);
+  color: rgba(255, 255, 255, 0.65);
   margin-top: -4px;
   display: block;
 }
@@ -332,7 +343,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-links a {
-  color: oklch(100% 0 0 / 0.8);
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
   font-size: 0.95rem;
   position: relative;
@@ -347,14 +358,14 @@ h1, h2, h3, h4, h5, h6 {
   right: 0;
   width: 0;
   height: 2px;
-  background: var(--gold-gradient);
+  background: var(--color-accent-500, #d4a843);
   transition: width var(--transition-base);
   border-radius: var(--radius-full);
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-  color: var(--gold);
+  color: var(--color-accent-400, #d4a843);
 }
 
 .nav-links a:hover::after,
@@ -376,14 +387,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .nav-cart svg,
 .nav-cart i {
-  color: var(--cream);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 1.4rem;
   transition: color var(--transition-fast);
 }
 
 .nav-cart:hover svg,
 .nav-cart:hover i {
-  color: var(--gold);
+  color: var(--color-accent-400, #d4a843);
 }
 
 .badge {
@@ -392,8 +403,8 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   min-width: 20px;
   height: 20px;
-  background: var(--gold);
-  color: var(--green-900);
+  background: var(--color-accent-500, #d4a843);
+  color: var(--color-primary-900, #1a2e1a);
   font-size: 0.7rem;
   font-weight: 800;
   border-radius: var(--radius-full);
@@ -403,7 +414,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1;
   padding: 0 5px;
   transform: translate(-30%, -30%);
-  box-shadow: 0 2px 8px oklch(75% 0.12 85 / 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   transition: transform var(--transition-bounce);
 }
 
@@ -425,7 +436,7 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   width: 26px;
   height: 2.5px;
-  background: var(--cream);
+  background: rgba(255, 255, 255, 0.85);
   border-radius: var(--radius-full);
   transition: all var(--transition-base);
   transform-origin: center;
@@ -433,7 +444,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .hamburger.active span:nth-child(1) {
   transform: translateY(7.5px) rotate(45deg);
-  background: var(--gold);
+  background: var(--color-accent-500, #d4a843);
 }
 
 .hamburger.active span:nth-child(2) {
@@ -617,13 +628,13 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: var(--space-sm);
   background: var(--gold-gradient);
-  color: var(--green-900);
+  color: var(--color-primary-900, #1a2e1a);
   padding: var(--space-md) var(--space-2xl);
   border-radius: var(--radius-full);
   font-weight: 700;
   font-size: 1.05rem;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: var(--shadow-gold);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -632,7 +643,7 @@ h1, h2, h3, h4, h5, h6 {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, oklch(100% 0 0 / 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transform: translateX(-100%);
   transition: transform 0.5s ease;
 }
@@ -643,12 +654,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero .cta-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px oklch(68% 0.08 85 / 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .hero .cta-btn:active {
   transform: translateY(0) scale(0.97);
-  box-shadow: 0 4px 16px oklch(68% 0.08 85 / 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .hero .cta-btn-outline {
@@ -656,19 +667,19 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: var(--space-sm);
   background: transparent;
-  color: var(--cream);
+  color: rgba(255, 255, 255, 0.9);
   padding: var(--space-md) var(--space-2xl);
   border-radius: var(--radius-full);
-  border: 1.5px solid oklch(75% 0.08 85 / 0.4);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
   font-weight: 600;
   font-size: 1.05rem;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero .cta-btn-outline:hover {
-  border-color: var(--gold);
-  color: var(--gold);
-  background: rgba(138, 120, 80, 0.08);
+  border-color: var(--color-accent-400, #d4a843);
+  color: var(--color-accent-400, #d4a843);
+  background: rgba(212, 168, 67, 0.08);
   transform: translateY(-1px);
 }
 
@@ -922,7 +933,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .menu-tab svg {
   flex-shrink: 0;
-  color: var(--gold-dark);
+  color: var(--color-secondary-600, #706040);
   transition: all var(--transition-base);
   width: 18px;
   height: 18px;
@@ -937,17 +948,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .menu-tab.active {
-  background: var(--gold);
-  color: var(--green-900);
-  border-color: var(--gold);
-  box-shadow: 0 4px 16px rgba(138, 120, 80, 0.35);
+  background: var(--color-primary-700, #2d6a4f);
+  color: #ffffff;
+  border-color: var(--color-primary-700, #2d6a4f);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   font-weight: 700;
   transform: translateY(0);
   z-index: 2;
 }
 
 .menu-tab.active svg {
-  color: var(--green-900);
+  color: #ffffff;
 }
 
 .menu-grid {
@@ -1067,7 +1078,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: 2px;
   padding: 8px 6px;
-  border: 1.5px solid var(--beige-dark);
+  border: 1.5px solid var(--color-primary-200, #e8e0d4);
   border-radius: 10px;
   background: transparent;
   cursor: pointer;
@@ -1075,8 +1086,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .size-btn:hover {
-  border-color: var(--green-600);
-  background: rgba(34, 80, 60, 0.03);
+  border-color: var(--color-primary-500, #52b788);
+  background: rgba(45, 106, 79, 0.03);
 }
 
 .size-btn:active {
@@ -1084,21 +1095,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .size-btn--active {
-  border-color: var(--green-700);
-  background: var(--green-50);
+  border-color: var(--color-primary-700, #2d6a4f);
+  background: var(--color-primary-50, #d8f3dc);
 }
 
 .size-btn__name {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--green-900);
+  color: var(--color-primary-900, #1a2e1a);
   transition: color 0.2s ease;
 }
 
 .size-btn__price {
   font-size: 0.7rem;
   font-weight: 700;
-  color: var(--green-700);
+  color: var(--color-primary-700, #2d6a4f);
   transition: color 0.2s ease;
 }
 
