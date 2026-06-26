@@ -195,7 +195,6 @@ export const THEME_PRESETS = {
   forest: {
     name: 'غابة عربية',
     nameEn: 'Arabic Forest',
-    emoji: '🌿',
     primary: '#2d6a4f',
     secondary: '#8a7850',
     accent: '#d4a843',
@@ -210,7 +209,6 @@ export const THEME_PRESETS = {
   desertGold: {
     name: 'صحراء ذهبية',
     nameEn: 'Desert Gold',
-    emoji: '🏜️',
     primary: '#92702a',
     secondary: '#c4956a',
     accent: '#e8a849',
@@ -225,7 +223,6 @@ export const THEME_PRESETS = {
   warmCafe: {
     name: 'قهوة دافئة',
     nameEn: 'Warm Cafe',
-    emoji: '☕',
     primary: '#6b3a2a',
     secondary: '#c4956a',
     accent: '#e8a849',
@@ -240,7 +237,6 @@ export const THEME_PRESETS = {
   darkElegance: {
     name: 'أناقة داكنة',
     nameEn: 'Dark Elegance',
-    emoji: '🖤',
     primary: '#1a1a2e',
     secondary: '#c9a96e',
     accent: '#e2c541',
@@ -255,7 +251,6 @@ export const THEME_PRESETS = {
   ocean: {
     name: 'محيط',
     nameEn: 'Ocean',
-    emoji: '🌊',
     primary: '#1a5276',
     secondary: '#2e86c1',
     accent: '#48c9b0',
@@ -270,7 +265,6 @@ export const THEME_PRESETS = {
   sunset: {
     name: 'غروب',
     nameEn: 'Sunset',
-    emoji: '🌅',
     primary: '#922b21',
     secondary: '#e67e22',
     accent: '#f1c40f',
@@ -285,7 +279,6 @@ export const THEME_PRESETS = {
   minimal: {
     name: 'بسيط',
     nameEn: 'Minimal',
-    emoji: '⬜',
     primary: '#2c3e50',
     secondary: '#7f8c8d',
     accent: '#3498db',
@@ -300,7 +293,6 @@ export const THEME_PRESETS = {
   lavender: {
     name: 'لافندر',
     nameEn: 'Lavender',
-    emoji: '💜',
     primary: '#5b2c6f',
     secondary: '#a569bd',
     accent: '#f0b27a',
@@ -315,7 +307,6 @@ export const THEME_PRESETS = {
   sage: {
     name: 'ساج',
     nameEn: 'Sage',
-    emoji: '🍃',
     primary: '#5d7a5e',
     secondary: '#a3b18a',
     accent: '#dad7cd',
@@ -330,7 +321,6 @@ export const THEME_PRESETS = {
   royal: {
     name: 'ملكي',
     nameEn: 'Royal',
-    emoji: '👑',
     primary: '#1e3a5f',
     secondary: '#c9a96e',
     accent: '#d4af37',
@@ -345,7 +335,6 @@ export const THEME_PRESETS = {
   roseGold: {
     name: 'وردي ذهبي',
     nameEn: 'Rose Gold',
-    emoji: '🌹',
     primary: '#8b4557',
     secondary: '#c9a0a0',
     accent: '#d4a843',
@@ -360,7 +349,6 @@ export const THEME_PRESETS = {
   turquoise: {
     name: 'فيروزي',
     nameEn: 'Turquoise',
-    emoji: '💎',
     primary: '#0d9488',
     secondary: '#5eead4',
     accent: '#f59e0b',
@@ -375,7 +363,6 @@ export const THEME_PRESETS = {
   mocha: {
     name: 'موكا',
     nameEn: 'Mocha',
-    emoji: '🍫',
     primary: '#4a3728',
     secondary: '#a0845c',
     accent: '#d4a843',

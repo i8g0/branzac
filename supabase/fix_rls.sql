@@ -1,31 +1,15 @@
--- Allow anonymous users to read menu_items
-DROP POLICY IF EXISTS "Allow all menu_items" ON menu_items;
-CREATE POLICY "anon_read_menu_items" ON menu_items
+-- Fix RLS policies for site_settings
+-- Allow public read, and public write (protected by admin login in app)
+
+-- Drop old restrictive policies
+DROP POLICY IF EXISTS "Auth write access" ON site_settings;
+DROP POLICY IF EXISTS "Public read access" ON site_settings;
+
+-- Anyone can read (public site)
+CREATE POLICY "Public read access" ON site_settings
   FOR SELECT USING (true);
-CREATE POLICY "anon_insert_menu_items" ON menu_items
-  FOR INSERT WITH CHECK (true);
-CREATE POLICY "anon_update_menu_items" ON menu_items
-  FOR UPDATE USING (true);
-CREATE POLICY "anon_delete_menu_items" ON menu_items
-  FOR DELETE USING (true);
 
--- Allow anonymous users to read menu_categories
-DROP POLICY IF EXISTS "Allow all menu_categories" ON menu_categories;
-CREATE POLICY "anon_read_menu_categories" ON menu_categories
-  FOR SELECT USING (true);
-CREATE POLICY "anon_insert_menu_categories" ON menu_categories
-  FOR INSERT WITH CHECK (true);
-CREATE POLICY "anon_update_menu_categories" ON menu_categories
-  FOR UPDATE USING (true);
-CREATE POLICY "anon_delete_menu_categories" ON menu_categories
-  FOR DELETE USING (true);
-
--- Allow anonymous users full access to contact_messages
-DROP POLICY IF EXISTS "Allow all contact_messages" ON contact_messages;
-CREATE POLICY "anon_all_contact_messages" ON contact_messages
-  FOR ALL USING (true);
-
--- Make sure RLS is enabled
-ALTER TABLE menu_items ENABLE ROW LEVEL SECURITY;
-ALTER TABLE menu_categories ENABLE ROW LEVEL SECURITY;
-ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+-- Anyone can update (admin auth handled in app, not Supabase Auth)
+CREATE POLICY "Public write access" ON site_settings
+  FOR ALL USING (true)
+  WITH CHECK (true);
