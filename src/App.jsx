@@ -1,9 +1,10 @@
-import { lazy, Suspense, useState, useCallback } from 'react'
+import { lazy, Suspense, useState, useCallback, useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import { useAnchorScroll } from './hooks/useAnchorScroll'
 import CartToast from './components/ui/CartToast'
 import SplashScreen from './components/SplashScreen'
+import useThemeStore from './stores/themeStore'
 
 const Navbar = lazy(() => import('./components/Navbar'))
 const Hero = lazy(() => import('./components/Hero'))
@@ -66,6 +67,11 @@ function HomePage() {
 export default function App() {
   const [showSplash, setShowSplash] = useState(true)
   const handleSplashDone = useCallback(() => setShowSplash(false), [])
+  const loadSettings = useThemeStore((s) => s.loadSettings)
+
+  useEffect(() => {
+    loadSettings()
+  }, [loadSettings])
 
   return (
     <BrowserRouter>
