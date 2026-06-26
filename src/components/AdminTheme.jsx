@@ -86,6 +86,24 @@ export default function AdminTheme() {
   const [saved, setSaved] = useState(false)
   const [saveError, setSaveError] = useState(null)
 
+  const autoSave = useCallback(async () => {
+    setSaving(true)
+    setSaveError(null)
+    try {
+      await saveSettings()
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (e) {
+      setSaveError(e.message || 'خطأ')
+    }
+    setSaving(false)
+  }, [saveSettings])
+
+  const handleColorChange = useCallback((key, value) => {
+    updateSetting(key, value)
+    autoSave()
+  }, [updateSetting, autoSave])
+
   const handleSave = useCallback(async () => {
     setSaving(true)
     setSaved(false)
@@ -191,13 +209,13 @@ export default function AdminTheme() {
                     <input
                       type="color"
                       value={settings[field.key] || '#000000'}
-                      onChange={e => updateSetting(field.key, e.target.value)}
+                      onChange={e => handleColorChange(field.key, e.target.value)}
                       className="theme-color-input"
                     />
                     <input
                       type="text"
                       value={settings[field.key] || ''}
-                      onChange={e => updateSetting(field.key, e.target.value)}
+                      onChange={e => handleColorChange(field.key, e.target.value)}
                       className="theme-color-text"
                       dir="ltr"
                     />
