@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin
 
-Sitemap: https://mahaseel-alshai.vercel.app/sitemap.xml
+Sitemap: https://branzac.vercel.app/sitemap.xml

@@ -119,7 +119,6 @@ export default function Hero() {
         className={`hero-content static-content ${loaded ? 'loaded' : ''}`}
         style={{ '--parallax-y': `${contentY}px` }}
       >
-        <h1 className="sr-only">محاصيل الشاي</h1>
         <p className="hero-welcome">{welcomeText}</p>
 
         <div className="hero-logo">
