@@ -179,9 +179,11 @@ export default function Menu() {
         </p>
 
         <div className="menu-search-wrapper">
+          <label htmlFor="menu-search" className="sr-only">بحث في المنيو</label>
           <div className="menu-search">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input
+              id="menu-search"
               type="text"
               placeholder="ابحث عن صنف..."
               value={searchQuery}

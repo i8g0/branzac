@@ -101,14 +101,14 @@ function computeButtonTokens(primary, secondary, accent) {
   const pBg = primary.set('lch.l', 0.42).set('lch.c', 0.12)
   const pHover = primary.set('lch.l', 0.35).set('lch.c', 0.13)
   const pActive = primary.set('lch.l', 0.28).set('lch.c', 0.14)
-  const pText = chroma.white
+  const pText = chroma('#ffffff')
   const pDisabled = primary.set('lch.l', 0.82).set('lch.c', 0.04)
 
   // Secondary button: use secondary-500 as bg
   const sBg = secondary.set('lch.l', 0.55).set('lch.c', 0.08)
   const sHover = secondary.set('lch.l', 0.48).set('lch.c', 0.09)
   const sActive = secondary.set('lch.l', 0.40).set('lch.c', 0.10)
-  const sText = ensureContrast(chroma.white, sBg, 4.5)
+  const sText = ensureContrast(chroma('#ffffff'), sBg, 4.5)
   const sDisabled = secondary.set('lch.l', 0.85).set('lch.c', 0.03)
 
   // Outline button: transparent bg, primary border + text
@@ -122,7 +122,7 @@ function computeButtonTokens(primary, secondary, accent) {
   const aBg = accent.set('lch.l', 0.62).set('lch.c', 0.09)
   const aHover = accent.set('lch.l', 0.55).set('lch.c', 0.10)
   const aActive = accent.set('lch.l', 0.48).set('lch.c', 0.11)
-  const aText = ensureContrast(chroma.white, aBg, 4.5)
+  const aText = ensureContrast(chroma('#ffffff'), aBg, 4.5)
 
   // Ghost button
   const gBg = 'transparent'

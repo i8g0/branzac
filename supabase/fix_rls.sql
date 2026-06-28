@@ -1,15 +1,19 @@
 -- Fix RLS policies for site_settings
--- Allow public read, and public write (protected by admin login in app)
+-- Public read, authenticated write only
 
--- Drop old restrictive policies
+-- Drop old policies
 DROP POLICY IF EXISTS "Auth write access" ON site_settings;
 DROP POLICY IF EXISTS "Public read access" ON site_settings;
+DROP POLICY IF EXISTS "Public write access" ON site_settings;
 
 -- Anyone can read (public site)
-CREATE POLICY "Public read access" ON site_settings
+CREATE POLICY "site_settings_select" ON site_settings
   FOR SELECT USING (true);
 
--- Anyone can update (admin auth handled in app, not Supabase Auth)
-CREATE POLICY "Public write access" ON site_settings
-  FOR ALL USING (true)
-  WITH CHECK (true);
+-- Only authenticated users (admin) can write
+CREATE POLICY "site_settings_insert" ON site_settings
+  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "site_settings_update" ON site_settings
+  FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "site_settings_delete" ON site_settings
+  FOR DELETE USING (auth.role() = 'authenticated');

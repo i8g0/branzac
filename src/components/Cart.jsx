@@ -95,6 +95,7 @@ export default function Cart() {
   const [submitting, setSubmitting] = useState(false)
   const [trackingOrder, setTrackingOrder] = useState(null)
   const [paymentMethod, setPaymentMethod] = useState('cash')
+  const [paymentStatus, setPaymentStatus] = useState('pending') // 'pending' | 'paid' | 'failed'
   const reduceMotion = useReducedMotion()
 
   const drawerTransition = reduceMotion ? { duration: 0.2 } : springDrawer
@@ -164,6 +165,7 @@ export default function Cart() {
       })),
       total_price: totalPrice,
       status: 'new',
+      payment_method: paymentMethod,
     }
 
     const { data, error } = await supabase.from('orders').insert([orderData]).select()
@@ -484,8 +486,20 @@ export default function Cart() {
                         <div className="payment-methods__grid">
                           <button
                             type="button"
+                            className={`payment-method-btn ${paymentMethod === 'cash' ? 'payment-method-btn--active' : ''}`}
+                            onClick={() => { setPaymentMethod('cash'); setPaymentStatus('pending'); }}
+                          >
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <rect x="2" y="6" width="20" height="12" rx="2"/>
+                              <circle cx="12" cy="12" r="2"/>
+                              <path d="M6 12h.01M18 12h.01"/>
+                            </svg>
+                            <span>كاش</span>
+                          </button>
+                          <button
+                            type="button"
                             className={`payment-method-btn ${paymentMethod === 'apple_pay' ? 'payment-method-btn--active' : ''}`}
-                            onClick={() => setPaymentMethod('apple_pay')}
+                            onClick={() => { setPaymentMethod('apple_pay'); setPaymentStatus('pending'); }}
                           >
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
                               <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
@@ -495,7 +509,7 @@ export default function Cart() {
                           <button
                             type="button"
                             className={`payment-method-btn ${paymentMethod === 'card' ? 'payment-method-btn--active' : ''}`}
-                            onClick={() => setPaymentMethod('card')}
+                            onClick={() => { setPaymentMethod('card'); setPaymentStatus('pending'); }}
                           >
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
@@ -522,20 +536,26 @@ export default function Cart() {
                           customerName={customerName}
                           orderId={`BRZ-${Date.now()}`}
                           onSuccess={(data) => {
+                            setPaymentStatus('paid')
                             handleConfirmOrder({ preventDefault: () => {} })
                           }}
-                          onError={(err) => console.error('Payment error:', err)}
+                          onError={(err) => {
+                            console.error('Payment error:', err)
+                            setPaymentStatus('failed')
+                          }}
                         />
                       )}
 
                       <button
                         type="submit"
                         className="confirm-order-btn"
-                        disabled={submitting || !selectedTable || items.length === 0}
+                        disabled={submitting || !selectedTable || items.length === 0 || (paymentMethod !== 'cash' && paymentStatus !== 'paid')}
                       >
                         {submitting
                           ? 'جاري الإرسال...'
-                          : `أرسل الطلب - ${formatPrice(totalPrice)} ر.س`}
+                          : paymentMethod !== 'cash' && paymentStatus !== 'paid'
+                            ? 'أكمل الدفع أولاً'
+                            : `أرسل الطلب - ${formatPrice(totalPrice)} ر.س`}
                       </button>
                     </form>
                   </>

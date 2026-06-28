@@ -68,6 +68,5 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Grant execute to anonymous users
-GRANT EXECUTE ON FUNCTION update_site_settings(jsonb) TO anon;
+-- Only authenticated users (admin) can call this function
 GRANT EXECUTE ON FUNCTION update_site_settings(jsonb) TO authenticated;
