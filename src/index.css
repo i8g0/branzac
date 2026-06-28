@@ -1180,7 +1180,7 @@ h1, h2, h3, h4, h5, h6 {
    ABOUT SECTION
    ═══════════════════════════════════════════════════════════════ */
 .about-section {
-  background: var(--green-700);
+  background: var(--green-900);
   color: var(--white);
   padding: var(--section-padding) 0;
   position: relative;
