@@ -23,7 +23,7 @@ const AdminHero = lazy(() => import('../components/AdminHero'))
 const AdminServices = lazy(() => import('../components/AdminServices'))
 const AdminTestimonials = lazy(() => import('../components/AdminTestimonials'))
 const AdminSettings = lazy(() => import('../components/AdminSettings'))
-const AdminTheme = lazy(() => import('../components/AdminTheme'))
+
 
 const STATUS_CONFIG = {
   new: { label: 'جديد', color: '#e74c3c', next: 'preparing' },
@@ -334,9 +334,6 @@ export default function Admin() {
           <button className={`admin-tab-btn ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>
             الرسائل {newMessagesCount > 0 && <span className="tab-badge">{newMessagesCount}</span>}
           </button>
-          <button className={`admin-tab-btn ${activeTab === 'theme' ? 'active' : ''}`} onClick={() => setActiveTab('theme')}>
-            المظهر
-          </button>
           <button className={`admin-tab-btn ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
             الإعدادات
           </button>
@@ -498,7 +495,6 @@ export default function Admin() {
           {activeTab === 'hero' && <AdminHero />}
           {activeTab === 'services' && <AdminServices />}
           {activeTab === 'testimonials' && <AdminTestimonials />}
-          {activeTab === 'theme' && <AdminTheme />}
           {activeTab === 'settings' && <AdminSettings />}
         </Suspense>
       ) : (

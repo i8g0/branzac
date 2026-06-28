@@ -3969,9 +3969,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .admin-tab-btn.active {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--green-900);
+  background: var(--green-700);
+  border-color: var(--green-700);
+  color: white;
   font-weight: 700;
 }
 
