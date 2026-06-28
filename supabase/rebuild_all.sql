@@ -62,13 +62,32 @@ ALTER PUBLICATION supabase_realtime ADD TABLE menu_items;
 ALTER PUBLICATION supabase_realtime ADD TABLE menu_categories;
 ALTER PUBLICATION supabase_realtime ADD TABLE contact_messages;
 
--- RLS - allow all for anon (matching existing app behavior)
+-- RLS - Public read, authenticated write only
 ALTER TABLE menu_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE menu_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Allow all menu_items" ON menu_items FOR ALL USING (true);
-CREATE POLICY "Allow all menu_categories" ON menu_categories FOR ALL USING (true);
-CREATE POLICY "Allow all orders" ON orders FOR ALL USING (true);
-CREATE POLICY "Allow all contact_messages" ON contact_messages FOR ALL USING (true);
+-- menu_items: public read, authenticated write
+CREATE POLICY "Public read menu_items" ON menu_items FOR SELECT USING (true);
+CREATE POLICY "Authenticated insert menu_items" ON menu_items FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated update menu_items" ON menu_items FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated delete menu_items" ON menu_items FOR DELETE USING (auth.role() = 'authenticated');
+
+-- menu_categories: public read, authenticated write
+CREATE POLICY "Public read menu_categories" ON menu_categories FOR SELECT USING (true);
+CREATE POLICY "Authenticated insert menu_categories" ON menu_categories FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated update menu_categories" ON menu_categories FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated delete menu_categories" ON menu_categories FOR DELETE USING (auth.role() = 'authenticated');
+
+-- orders: public read + insert (customers place orders), authenticated update/delete
+CREATE POLICY "Public read orders" ON orders FOR SELECT USING (true);
+CREATE POLICY "Public insert orders" ON orders FOR INSERT WITH CHECK (true);
+CREATE POLICY "Authenticated update orders" ON orders FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated delete orders" ON orders FOR DELETE USING (auth.role() = 'authenticated');
+
+-- contact_messages: public insert only, authenticated read/update/delete
+CREATE POLICY "Authenticated read contact_messages" ON contact_messages FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Public insert contact_messages" ON contact_messages FOR INSERT WITH CHECK (true);
+CREATE POLICY "Authenticated update contact_messages" ON contact_messages FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated delete contact_messages" ON contact_messages FOR DELETE USING (auth.role() = 'authenticated');

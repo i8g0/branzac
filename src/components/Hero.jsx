@@ -85,6 +85,7 @@ export default function Hero() {
 
   return (
     <section className="hero" id="home" aria-label="الصفحة الرئيسية">
+      <h1 className="sr-only">محاصيل الشاي — شاي تقليدي في الرياض</h1>
       <div className="hero-slider" aria-hidden="true">
         <motion.div
           className="hero-slider-track"

@@ -68,6 +68,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Grant execute to anonymous users
-GRANT EXECUTE ON FUNCTION update_site_settings(jsonb) TO anon;
+-- Grant execute to authenticated users ONLY (not anon)
+-- SECURITY DEFINER means the function runs as the owner, bypassing RLS
+REVOKE EXECUTE ON FUNCTION update_site_settings(jsonb) FROM anon;
 GRANT EXECUTE ON FUNCTION update_site_settings(jsonb) TO authenticated;

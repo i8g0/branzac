@@ -2,25 +2,53 @@ import { useState, useEffect } from 'react'
 
 const CACHE_BUST = Date.now()
 
+function preloadImage(src) {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = resolve
+    img.onerror = resolve
+    img.src = src
+  })
+}
+
 export default function SplashScreen({ onComplete }) {
   const [progress, setProgress] = useState(0)
   const [fadeOut, setFadeOut] = useState(false)
 
   useEffect(() => {
+    let cancelled = false
+
+    const loadAssets = async () => {
+      const minTime = new Promise((r) => setTimeout(r, 800))
+      const images = Promise.all([
+        preloadImage(`/images/logo-transparent.png?v=${CACHE_BUST}`),
+        preloadImage(`/images/logo-bg.png?v=${CACHE_BUST}`),
+      ])
+
+      await Promise.all([minTime, images])
+
+      if (!cancelled) {
+        setProgress(100)
+        setFadeOut(true)
+        setTimeout(() => onComplete(), 600)
+      }
+    }
+
+    loadAssets()
+
+    return () => { cancelled = true }
+  }, [onComplete])
+
+  useEffect(() => {
+    if (progress >= 100) return
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          setFadeOut(true)
-          setTimeout(() => onComplete(), 600)
-          return 100
-        }
-        return prev + Math.random() * 15 + 5
+        if (prev >= 90) return prev
+        return prev + Math.random() * 10 + 3
       })
-    }, 120)
-
+    }, 150)
     return () => clearInterval(interval)
-  }, [onComplete])
+  }, [progress])
 
   return (
     <div className={`splash-screen ${fadeOut ? 'splash-fade-out' : ''}`}>
