@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 const MF_SCRIPT_URL = 'https://sa.myfatoorah.com/payment/v1/session.js';
 
@@ -20,6 +20,13 @@ export default function MyFatoorahCheckout({ amount, customerName, orderId, onSu
   const containerRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+    onErrorRef.current = onError;
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -62,7 +69,7 @@ export default function MyFatoorahCheckout({ amount, customerName, orderId, onSu
         if (!cancelled) {
           setError(err.message);
           setLoading(false);
-          onError?.(err.message);
+          onErrorRef.current?.(err.message);
         }
       }
     }
@@ -71,7 +78,7 @@ export default function MyFatoorahCheckout({ amount, customerName, orderId, onSu
     return () => { cancelled = true; };
   }, [amount, customerName, orderId]);
 
-  const handlePaymentResponse = async (response) => {
+  const handlePaymentResponse = useCallback(async (response) => {
     try {
       const res = await fetch('/api/execute-payment', {
         method: 'POST',
@@ -85,15 +92,15 @@ export default function MyFatoorahCheckout({ amount, customerName, orderId, onSu
       if (!res.ok) throw new Error(data.error || 'Payment failed');
 
       if (data.paymentStatus === 'Paid') {
-        onSuccess?.(data);
+        onSuccessRef.current?.(data);
       } else if (data.paymentURL) {
         window.location.href = data.paymentURL;
       }
     } catch (err) {
       setError(err.message);
-      onError?.(err.message);
+      onErrorRef.current?.(err.message);
     }
-  };
+  }, []);
 
   if (loading) {
     return (

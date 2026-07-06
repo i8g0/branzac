@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import useThemeStore from '../stores/themeStore'
+import useThemeStore from '../store/themeStore'
 import { THEME_PRESETS } from '../lib/colorPalette'
 
 const PaletteIcon = () => (

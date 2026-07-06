@@ -1,7 +1,12 @@
 import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 export const config = {
   api: { bodyParser: false },
@@ -29,21 +34,38 @@ export default async function handler(req, res) {
   switch (event.type) {
     case 'payment_intent.succeeded': {
       const paymentIntent = event.data.object;
-      console.log('Payment succeeded:', paymentIntent.id);
+      const orderId = paymentIntent.metadata?.orderId;
 
-      // TODO: Update order status in Supabase
-      // const { orderId } = paymentIntent.metadata;
-      // await supabase.from('orders').update({ status: 'paid' }).eq('id', orderId);
-
+      if (orderId && supabase) {
+        try {
+          await supabase
+            .from('orders')
+            .update({ status: 'paid', payment_id: paymentIntent.id })
+            .eq('id', orderId);
+        } catch (e) {
+          console.error('Failed to update order status:', e.message);
+        }
+      }
       break;
     }
     case 'payment_intent.payment_failed': {
       const paymentIntent = event.data.object;
-      console.log('Payment failed:', paymentIntent.id);
+      const orderId = paymentIntent.metadata?.orderId;
+
+      if (orderId && supabase) {
+        try {
+          await supabase
+            .from('orders')
+            .update({ status: 'payment_failed' })
+            .eq('id', orderId);
+        } catch (e) {
+          console.error('Failed to update order status:', e.message);
+        }
+      }
       break;
     }
     default:
-      console.log(`Unhandled event type: ${event.type}`);
+      break;
   }
 
   res.status(200).json({ received: true });

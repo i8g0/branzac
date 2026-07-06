@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const CACHE_BUST = Date.now()
+
 
 function preloadImage(src) {
   return new Promise((resolve) => {
@@ -21,8 +21,8 @@ export default function SplashScreen({ onComplete }) {
     const loadAssets = async () => {
       const minTime = new Promise((r) => setTimeout(r, 800))
       const images = Promise.all([
-        preloadImage(`/images/logo-transparent.png?v=${CACHE_BUST}`),
-        preloadImage(`/images/logo-bg.png?v=${CACHE_BUST}`),
+        preloadImage('/images/logo-transparent.png'),
+        preloadImage('/images/logo-bg.png'),
       ])
 
       await Promise.all([minTime, images])
@@ -54,11 +54,11 @@ export default function SplashScreen({ onComplete }) {
     <div className={`splash-screen ${fadeOut ? 'splash-fade-out' : ''}`}>
       <div className="splash-content">
         <div className="splash-logo-img">
-          <img src={`/images/logo-transparent.png?v=${CACHE_BUST}`} alt="" width={160} height={160} />
+          <img src="/images/logo-transparent.png" alt="" width={160} height={160} />
         </div>
 
         <div className="splash-brand-text">
-          <img src={`/images/logo-bg.png?v=${CACHE_BUST}`} alt="محاصيل الشاي" />
+          <img src="/images/logo-bg.png" alt="محاصيل الشاي" />
         </div>
 
         <div className="splash-progress-bar">

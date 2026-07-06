@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, createContext, useContext } from 'react'
 import { supabase } from '../lib/supabase'
 import { useSiteLogo } from '../hooks/useSiteLogo'
+
+export const AdminSessionContext = createContext(null)
+export const useAdminSession = () => useContext(AdminSessionContext)
 
 export default function AdminGuard({ children }) {
   const [session, setSession] = useState(null)
@@ -264,8 +267,3 @@ export default function AdminGuard({ children }) {
     </div>
   )
 }
-
-// Context to share session/logout with Admin page
-import { createContext, useContext } from 'react'
-export const AdminSessionContext = createContext(null)
-export const useAdminSession = () => useContext(AdminSessionContext)

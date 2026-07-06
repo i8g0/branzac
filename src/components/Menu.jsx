@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, memo, useRef } from 'react'
+import { useState, useEffect, useCallback, memo, useRef, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useCartActions } from '../store/cartStore'
 import { supabase } from '../lib/supabase'
@@ -18,7 +18,7 @@ const MenuCard = memo(function MenuCard({ item, onAdd, sizesConfig }) {
     if (sizes && sizes.length > 0 && !selectedSize) {
       setSelectedSize(sizes[0].name)
     }
-  }, [sizes])
+  }, [sizes, selectedSize])
 
   const currentPrice = selectedSize && sizes
     ? getPriceForSize(sizes, selectedSize)
@@ -161,12 +161,15 @@ export default function Menu() {
     }
   }, [])
 
-  const filteredItems = menuItems.filter((item) => {
-    const matchCategory = activeCategory === 'all' || stripEmojis(item.category).trim() === stripEmojis(activeCategory).trim()
-    const q = searchQuery.trim().toLowerCase()
-    const matchSearch = !q || item.name.toLowerCase().includes(q) || (item.name_en && item.name_en.toLowerCase().includes(q))
-    return matchCategory && matchSearch
-  })
+  const filteredItems = useMemo(() =>
+    menuItems.filter((item) => {
+      const matchCategory = activeCategory === 'all' || stripEmojis(item.category).trim() === stripEmojis(activeCategory).trim()
+      const q = searchQuery.trim().toLowerCase()
+      const matchSearch = !q || item.name.toLowerCase().includes(q) || (item.name_en && item.name_en.toLowerCase().includes(q))
+      return matchCategory && matchSearch
+    }),
+    [menuItems, activeCategory, searchQuery]
+  )
 
   return (
     <section className="menu-section" id="menu" aria-labelledby="menu-heading">
@@ -217,6 +220,18 @@ export default function Menu() {
                 }
                 menuGridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
               }}
+              onKeyDown={(e) => {
+                const tabs = tabsRef.current?.querySelectorAll('[role="tab"]')
+                if (!tabs) return
+                const idx = [...tabs].indexOf(e.currentTarget)
+                let next
+                if (e.key === 'ArrowRight') next = tabs[idx - 1] || tabs[tabs.length - 1]
+                else if (e.key === 'ArrowLeft') next = tabs[idx + 1] || tabs[0]
+                else if (e.key === 'Home') next = tabs[0]
+                else if (e.key === 'End') next = tabs[tabs.length - 1]
+                if (next) { e.preventDefault(); next.focus(); next.click() }
+              }}
+              tabIndex={activeCategory === cat.id ? 0 : -1}
             >
               {cat.icon && <IconRenderer iconStr={cat.icon} size={18} />}
               {stripEmojis(cat.name)}

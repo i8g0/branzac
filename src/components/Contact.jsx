@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useSiteSettings } from '../hooks/useSiteSettings'
 import { supabase } from '../lib/supabase'
 import { springModal } from '../lib/motion'
+import { sanitizeText, sanitizePhone } from '../lib/sanitize'
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', phone: '', message: '' })
@@ -30,9 +31,9 @@ export default function Contact() {
 
       const { error: insertError } = await supabase.from('contact_messages').insert([
         {
-          name: formData.name.trim(),
-          phone: formData.phone.trim(),
-          message: formData.message.trim(),
+          name: sanitizeText(formData.name, 100),
+          phone: sanitizePhone(formData.phone),
+          message: sanitizeText(formData.message, 2000),
         },
       ])
 

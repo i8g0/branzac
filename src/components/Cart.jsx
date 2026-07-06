@@ -96,6 +96,8 @@ export default function Cart() {
   const [trackingOrder, setTrackingOrder] = useState(null)
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [paymentSuccess, setPaymentSuccess] = useState(false)
+  const [tableError, setTableError] = useState(false)
+  const [orderError, setOrderError] = useState(null)
   const reduceMotion = useReducedMotion()
 
   const drawerTransition = reduceMotion ? { duration: 0.2 } : springDrawer
@@ -149,9 +151,13 @@ export default function Cart() {
 
   const handleConfirmOrder = async (e) => {
     e.preventDefault()
-    if (!selectedTable || submitting || items.length === 0) return
+    if (!selectedTable || submitting || items.length === 0) {
+      if (!selectedTable) setTableError(true)
+      return
+    }
 
     setSubmitting(true)
+    setOrderError(null)
 
     const orderData = {
       table_number: selectedTable,
@@ -172,8 +178,7 @@ export default function Cart() {
     setSubmitting(false)
 
     if (error) {
-      console.error('Order error:', error)
-      alert('حدث خطأ في إرسال الطلب. حاول مرة أخرى.')
+      setOrderError('حدث خطأ في إرسال الطلب. حاول مرة أخرى.')
       return
     }
 
@@ -450,7 +455,7 @@ export default function Cart() {
                             </button>
                           ))}
                         </div>
-                        {!selectedTable && (
+                        {tableError && !selectedTable && (
                           <p className="form-error" role="alert">
                             اختر رقم طاولتك
                           </p>
@@ -540,6 +545,10 @@ export default function Cart() {
                           </svg>
                           الدفع عند الاستلام
                         </button>
+                      )}
+
+                      {orderError && (
+                        <p className="form-error" role="alert">{orderError}</p>
                       )}
 
                       <button

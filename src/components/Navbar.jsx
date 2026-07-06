@@ -5,6 +5,7 @@ import { useCartTotals, useCartUi } from '../store/cartStore'
 import { useSiteLogo } from '../hooks/useSiteLogo'
 import { useScrolled } from '../hooks/useThrottledScroll'
 import { springDrawer } from '../lib/motion'
+import { lockScroll, unlockScroll } from '../lib/scrollLock'
 
 const NAV_LINKS = [
   { label: 'الرئيسية', href: '#home' },
@@ -24,9 +25,13 @@ export default function Navbar() {
   const closeMobile = useCallback(() => setMobileOpen(false), [])
 
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? 'hidden' : ''
+    if (mobileOpen) {
+      lockScroll()
+    }
     return () => {
-      document.body.style.overflow = ''
+      if (mobileOpen) {
+        unlockScroll()
+      }
     }
   }, [mobileOpen])
 
@@ -151,20 +156,19 @@ export default function Navbar() {
               </span>
             </button>
 
-            {!mobileOpen && (
-              <button
-                type="button"
-                className="hamburger"
-                onClick={() => setMobileOpen(true)}
-                aria-expanded={false}
-                aria-controls="mobile-nav"
-                aria-label="فتح القائمة"
-              >
-                <span />
-                <span />
-                <span />
-              </button>
-            )}
+            <button
+              type="button"
+              className="hamburger"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-nav"
+              aria-label={mobileOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+              style={{ display: mobileOpen ? 'none' : undefined }}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
           </div>
         </div>
       </nav>

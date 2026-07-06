@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { supabase, createDebouncedRefetch } from '../lib/supabase'
 import { useSiteLogo } from '../hooks/useSiteLogo'
@@ -6,6 +6,7 @@ import { useSiteWelcome } from '../hooks/useSiteWelcome'
 import { useSiteTagline } from '../hooks/useSiteTagline'
 import { useScrollY } from '../hooks/useThrottledScroll'
 import { springSoft } from '../lib/motion'
+import { sanitizeImageUrl } from '../lib/sanitize'
 
 const DEFAULT_SLIDE = {
   id: 'default',
@@ -58,7 +59,10 @@ export default function Hero() {
     return () => supabase.removeChannel(channel)
   }, [fetchSlidesAndLogo])
 
-  const displaySlides = slides.length > 0 ? slides : [DEFAULT_SLIDE]
+  const displaySlides = useMemo(
+    () => (slides.length > 0 ? slides : [DEFAULT_SLIDE]),
+    [slides]
+  )
   const totalSlides = displaySlides.length
 
   useEffect(() => {
@@ -102,7 +106,7 @@ export default function Hero() {
                 <div
                   className="hero-slide-bg"
                   style={{
-                    backgroundImage: `url('${slide.image}')`,
+                    backgroundImage: slide.image ? `url('${sanitizeImageUrl(slide.image)}')` : 'none',
                     filter: isActive ? `blur(${blurAmount}px)` : 'none',
                     transform: isActive
                       ? `translateY(${parallaxY}px) scale(1.04)`

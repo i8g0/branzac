@@ -6,7 +6,7 @@ const CHANNEL_NAME = 'site-welcome-shared'
 
 let welcomeText = DEFAULT_WELCOME
 const listeners = new Set()
-let realtimeStarted = false
+let channel = null
 
 async function fetchWelcomeFromDb() {
   const { data } = await supabase
@@ -20,33 +20,33 @@ async function fetchWelcomeFromDb() {
   }
 }
 
-function startWelcomeRealtime() {
-  if (realtimeStarted) return
-  realtimeStarted = true
-
-  fetchWelcomeFromDb()
-
-  supabase
-    .channel(CHANNEL_NAME)
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'menu_items',
-        filter: 'category=eq.__site_welcome__',
-      },
-      () => {
-        fetchWelcomeFromDb()
-      }
-    )
-    .subscribe()
-}
-
 function subscribe(callback) {
   listeners.add(callback)
-  startWelcomeRealtime()
-  return () => listeners.delete(callback)
+  if (!channel) {
+    fetchWelcomeFromDb()
+    channel = supabase
+      .channel(CHANNEL_NAME)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'menu_items',
+          filter: 'category=eq.__site_welcome__',
+        },
+        () => {
+          fetchWelcomeFromDb()
+        }
+      )
+      .subscribe()
+  }
+  return () => {
+    listeners.delete(callback)
+    if (listeners.size === 0 && channel) {
+      supabase.removeChannel(channel)
+      channel = null
+    }
+  }
 }
 
 function getSnapshot() {

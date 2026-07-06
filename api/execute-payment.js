@@ -10,7 +10,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Session ID is required' });
     }
 
-    const apiKey = req.headers['x-mf-key'] || process.env.MF_API_KEY;
+    const apiKey = process.env.MF_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: 'Payment configuration error' });
+    }
     const baseUrl = process.env.MF_BASE_URL || 'https://apitest.myfatoorah.com';
 
     const response = await fetch(`${baseUrl}/v2/ExecutePayment`, {

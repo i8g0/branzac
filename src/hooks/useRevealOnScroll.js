@@ -38,21 +38,9 @@ export function useRevealOnScroll() {
       subtree: true,
     })
 
-    // Also run on scroll/resize as a fail-safe to detect dynamically rendered content
-    window.addEventListener('scroll', observeElements, { passive: true })
-    window.addEventListener('resize', observeElements, { passive: true })
-
-    // Fallback: Check every 1 second for any unobserved elements
-    const interval = setInterval(observeElements, 1000)
-
     return () => {
       observer.disconnect()
       mutationObserver.disconnect()
-      window.removeEventListener('scroll', observeElements)
-      window.removeEventListener('resize', observeElements)
-      clearInterval(interval)
     }
   }, [])
 }
-
-

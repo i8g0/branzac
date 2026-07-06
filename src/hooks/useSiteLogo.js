@@ -6,7 +6,7 @@ const CHANNEL_NAME = 'site-logo-shared'
 
 let logoUrl = DEFAULT_LOGO
 const listeners = new Set()
-let realtimeStarted = false
+let channel = null
 
 async function fetchLogoFromDb() {
   const { data } = await supabase
@@ -20,33 +20,33 @@ async function fetchLogoFromDb() {
   }
 }
 
-function startLogoRealtime() {
-  if (realtimeStarted) return
-  realtimeStarted = true
-
-  fetchLogoFromDb()
-
-  supabase
-    .channel(CHANNEL_NAME)
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'menu_items',
-        filter: 'category=eq.__site_logo__',
-      },
-      () => {
-        fetchLogoFromDb()
-      }
-    )
-    .subscribe()
-}
-
 function subscribe(callback) {
   listeners.add(callback)
-  startLogoRealtime()
-  return () => listeners.delete(callback)
+  if (!channel) {
+    fetchLogoFromDb()
+    channel = supabase
+      .channel(CHANNEL_NAME)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'menu_items',
+          filter: 'category=eq.__site_logo__',
+        },
+        () => {
+          fetchLogoFromDb()
+        }
+      )
+      .subscribe()
+  }
+  return () => {
+    listeners.delete(callback)
+    if (listeners.size === 0 && channel) {
+      supabase.removeChannel(channel)
+      channel = null
+    }
+  }
 }
 
 function getSnapshot() {

@@ -6,7 +6,7 @@ const CHANNEL_NAME = 'site-tagline-shared'
 
 let taglineText = DEFAULT_TAGLINE
 const listeners = new Set()
-let realtimeStarted = false
+let channel = null
 
 async function fetchTaglineFromDb() {
   const { data } = await supabase
@@ -20,33 +20,33 @@ async function fetchTaglineFromDb() {
   }
 }
 
-function startTaglineRealtime() {
-  if (realtimeStarted) return
-  realtimeStarted = true
-
-  fetchTaglineFromDb()
-
-  supabase
-    .channel(CHANNEL_NAME)
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'menu_items',
-        filter: 'category=eq.__site_tagline__',
-      },
-      () => {
-        fetchTaglineFromDb()
-      }
-    )
-    .subscribe()
-}
-
 function subscribe(callback) {
   listeners.add(callback)
-  startTaglineRealtime()
-  return () => listeners.delete(callback)
+  if (!channel) {
+    fetchTaglineFromDb()
+    channel = supabase
+      .channel(CHANNEL_NAME)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'menu_items',
+          filter: 'category=eq.__site_tagline__',
+        },
+        () => {
+          fetchTaglineFromDb()
+        }
+      )
+      .subscribe()
+  }
+  return () => {
+    listeners.delete(callback)
+    if (listeners.size === 0 && channel) {
+      supabase.removeChannel(channel)
+      channel = null
+    }
+  }
 }
 
 function getSnapshot() {

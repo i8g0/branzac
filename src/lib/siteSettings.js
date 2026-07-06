@@ -49,8 +49,6 @@ export async function fetchSiteSettings() {
 }
 
 export async function updateSiteSettings(updates) {
-  console.log('Saving via RPC:', updates)
-
   try {
     const { data, error } = await supabase
       .rpc('update_site_settings', { payload: updates })
@@ -60,7 +58,6 @@ export async function updateSiteSettings(updates) {
       throw error
     }
 
-    console.log('RPC success:', data)
     cachedSettings = { ...DEFAULT_SETTINGS, ...data }
     applyTheme(cachedSettings)
     return cachedSettings

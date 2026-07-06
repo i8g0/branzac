@@ -17,7 +17,7 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "TeaStore",
+        "@type": "CafeOrCoffeeShop",
         "name": "محاصيل الشاي",
         "description": "محل شاي تقليدي في الرياض — أجود أنواع الشاي والكرك والمشروبات الساخنة",
         "address": {
@@ -50,9 +50,9 @@
           }
           var pr=s.primary_color||'#2d6a4f', sc=s.secondary_color||'#8a7850', ac=s.accent_color||'#d4a843';
           var css=':root{--color-primary-500:'+pr+';--color-secondary-500:'+sc+';--color-accent-500:'+ac+';}';
+          if(s.font_family){css+='body{font-family:"'+s.font_family+'",sans-serif;}'}
           var st=document.createElement('style');st.id='anti-fouc';st.textContent=css;
           document.head.appendChild(st);
-          if(s.font_family){document.body.style.fontFamily="'"+s.font_family+"',sans-serif";}
         }catch(e){}
       })();
     </script>

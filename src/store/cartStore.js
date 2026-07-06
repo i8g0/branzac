@@ -14,11 +14,15 @@ function computeTotals(items) {
   return { totalItems, totalPrice }
 }
 
+let toastTimer = null
+
 function pushToast(set, message) {
+  if (toastTimer) clearTimeout(toastTimer)
   const id = Date.now()
   set({ toast: { id, message } })
-  setTimeout(() => {
+  toastTimer = setTimeout(() => {
     set((state) => (state.toast?.id === id ? { toast: null } : state))
+    toastTimer = null
   }, TOAST_DURATION_MS)
 }
 
@@ -108,19 +112,3 @@ export const useCartActions = () =>
     }))
   )
 
-/** @deprecated Use granular hooks above */
-export function useCart() {
-  return useCartStore(
-    useShallow((s) => ({
-      items: s.items,
-      isOpen: s.isOpen,
-      toast: s.toast,
-      setIsOpen: s.setIsOpen,
-      addItem: s.addItem,
-      removeItem: s.removeItem,
-      updateQuantity: s.updateQuantity,
-      clearCart: s.clearCart,
-      ...computeTotals(s.items),
-    }))
-  )
-}
