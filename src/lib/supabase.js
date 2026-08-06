@@ -1,12 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 import { debounce } from './performance'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase environment variables. Check your .env file.')
-}
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://yjgtablerdbkzuwxkmyp.supabase.co'
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_ZeQ_IIQ26DFUCb5KYFlovQ_45rH0Jd1'
 
 export const supabase = createClient(supabaseUrl, supabaseKey)
 
