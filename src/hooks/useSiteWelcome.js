@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react'
 import { supabase } from '../lib/supabase'
 
-const DEFAULT_WELCOME = 'مرحباً بكم في'
+const DEFAULT_WELCOME = 'مرحباً بكم في محاصيل الشاي'
 const CHANNEL_NAME = 'site-welcome-shared'
 
 let welcomeText = DEFAULT_WELCOME

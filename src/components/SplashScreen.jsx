@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 
-
-
 function preloadImage(src) {
+  if (!src) return Promise.resolve()
   return new Promise((resolve) => {
     const img = new Image()
     img.onload = resolve
@@ -19,34 +18,56 @@ export default function SplashScreen({ onComplete }) {
     let cancelled = false
 
     const loadAssets = async () => {
-      const minTime = new Promise((r) => setTimeout(r, 800))
-      const images = Promise.all([
-        preloadImage('/images/logo-transparent.png'),
-        preloadImage('/images/logo-bg.png'),
-      ])
+      // 1. Critical bundled & hero images to preload while splash screen is active
+      const criticalImages = [
+        '/images/logo-transparent.png',
+        '/images/logo-bg.png',
+        '/images/cafe-interior.png',
+        '/images/hero-bg.png',
+        '/images/tea-default.png'
+      ]
 
-      await Promise.all([minTime, images])
+      let loadedCount = 0
+      const total = criticalImages.length
+
+      const updateProgress = () => {
+        if (cancelled) return
+        loadedCount++
+        const pct = Math.min(Math.round((loadedCount / total) * 100), 95)
+        setProgress((prev) => Math.max(prev, pct))
+      }
+
+      const promises = criticalImages.map((src) =>
+        preloadImage(src).then(updateProgress)
+      )
+
+      // Ensure minimum splash time for ultra smooth transition (400ms)
+      const minTimer = new Promise((r) => setTimeout(r, 400))
+
+      await Promise.all([Promise.all(promises), minTimer])
 
       if (!cancelled) {
         setProgress(100)
         setFadeOut(true)
-        setTimeout(() => onComplete(), 600)
+        setTimeout(() => onComplete(), 500)
       }
     }
 
     loadAssets()
 
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [onComplete])
 
   useEffect(() => {
     if (progress >= 100) return
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 90) return prev
-        return prev + Math.random() * 10 + 3
+        if (prev >= 95) return prev
+        return prev + Math.random() * 12 + 6
       })
-    }, 150)
+    }, 80)
     return () => clearInterval(interval)
   }, [progress])
 
@@ -54,29 +75,49 @@ export default function SplashScreen({ onComplete }) {
     <div className={`splash-screen ${fadeOut ? 'splash-fade-out' : ''}`}>
       <div className="splash-content">
         <div className="splash-logo-img">
-          <img src="/images/logo-transparent.png" alt="" width={160} height={160} />
+          <img
+            src="/images/logo-transparent.png"
+            alt="شعار محاصيل الشاي"
+            width={160}
+            height={160}
+            loading="eager"
+            decoding="sync"
+          />
         </div>
 
         <div className="splash-brand-text">
-          <img src="/images/logo-bg.png" alt="محاصيل الشاي" />
+          <img
+            src="/images/logo-bg.png"
+            alt="مرحباً بكم في محاصيل الشاي"
+            loading="eager"
+            decoding="sync"
+          />
         </div>
 
         <div className="splash-progress-bar">
-          <div className="splash-progress-fill" style={{ width: `${Math.min(progress, 100)}%` }} />
+          <div
+            className="splash-progress-fill"
+            style={{ width: `${Math.min(progress, 100)}%` }}
+          />
         </div>
 
-        <p className="splash-loading-text">جاري التحميل...</p>
+        <p className="splash-loading-text">جاري تحضير التجربة...</p>
       </div>
 
       <div className="splash-particles" aria-hidden="true">
         {Array.from({ length: 12 }).map((_, i) => (
-          <span key={i} className="splash-particle" style={{
-            '--delay': `${i * 0.3}s`,
-            '--x': `${10 + Math.random() * 80}%`,
-            '--duration': `${3 + Math.random() * 4}s`,
-          }} />
+          <span
+            key={i}
+            className="splash-particle"
+            style={{
+              '--delay': `${i * 0.3}s`,
+              '--x': `${10 + Math.random() * 80}%`,
+              '--duration': `${3 + Math.random() * 4}s`,
+            }}
+          />
         ))}
       </div>
     </div>
   )
 }
+
