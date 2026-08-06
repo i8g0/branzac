@@ -5,59 +5,33 @@ import { useAnchorScroll } from './hooks/useAnchorScroll'
 import CartToast from './components/ui/CartToast'
 import SplashScreen from './components/SplashScreen'
 
-const Navbar = lazy(() => import('./components/Navbar'))
-const Hero = lazy(() => import('./components/Hero'))
-const Menu = lazy(() => import('./components/Menu'))
-const About = lazy(() => import('./components/About'))
-const Testimonials = lazy(() => import('./components/Testimonials'))
-const Contact = lazy(() => import('./components/Contact'))
-const Cart = lazy(() => import('./components/Cart'))
-const Footer = lazy(() => import('./components/Footer'))
+import Navbar from './components/Navbar'
+import Hero from './components/Hero'
+import Menu from './components/Menu'
+import About from './components/About'
+import Testimonials from './components/Testimonials'
+import Contact from './components/Contact'
+import Cart from './components/Cart'
+import Footer from './components/Footer'
+
 const Admin = lazy(() => import('./pages/Admin'))
 const AdminGuard = lazy(() => import('./components/AdminGuard'))
 
-function SectionFallback({ minHeight = '40vh' }) {
-  return (
-    <div
-      className="section-fallback"
-      style={{ minHeight }}
-      aria-hidden="true"
-    />
-  )
-}
-
 function HomePage() {
-
   useAnchorScroll()
 
   return (
     <div className="app">
-      <Suspense fallback={<SectionFallback minHeight="72px" />}>
-        <Navbar />
-      </Suspense>
+      <Navbar />
       <main id="main-content">
-        <Suspense fallback={<SectionFallback minHeight="100vh" />}>
-          <Hero />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <Menu />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <About />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <Testimonials />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
-          <Contact />
-        </Suspense>
+        <Hero />
+        <Menu />
+        <About />
+        <Testimonials />
+        <Contact />
       </main>
-      <Suspense fallback={null}>
-        <Footer />
-      </Suspense>
-      <Suspense fallback={null}>
-        <Cart />
-      </Suspense>
+      <Footer />
+      <Cart />
       <CartToast />
     </div>
   )
