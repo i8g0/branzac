@@ -14,25 +14,29 @@ export function useSiteSettings() {
 
   useEffect(() => {
     async function fetchSettings() {
-      const { data } = await supabase
-        .from('menu_items')
-        .select('*')
-        .eq('category', '__site_settings__')
-      
-      if (data && data.length > 0) {
-        setSettings(prev => {
-          const newSettings = { ...prev }
-          data.forEach(item => {
-            if (item.name === 'hours') {
-              try {
-                newSettings.hours = JSON.parse(item.description)
-              } catch (e) {}
-            } else {
-              newSettings[item.name] = item.description
-            }
+      try {
+        const { data } = await supabase
+          .from('menu_items')
+          .select('*')
+          .eq('category', '__site_settings__')
+        
+        if (data && data.length > 0) {
+          setSettings(prev => {
+            const newSettings = { ...prev }
+            data.forEach(item => {
+              if (item.name === 'hours') {
+                try {
+                  newSettings.hours = JSON.parse(item.description)
+                } catch (e) {}
+              } else {
+                newSettings[item.name] = item.description
+              }
+            })
+            return newSettings
           })
-          return newSettings
-        })
+        }
+      } catch (err) {
+        console.warn('Failed to fetch settings from Supabase:', err)
       }
     }
     fetchSettings()

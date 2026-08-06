@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { springSoft } from '../../lib/motion'
 import { BLUR_PLACEHOLDER } from '../../lib/imagePlaceholder'
@@ -15,7 +15,14 @@ export default function PremiumImage({
   priority = false,
   placeholderSrc = BLUR_PLACEHOLDER,
 }) {
+  const imgRef = useRef(null)
   const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
+      setLoaded(true)
+    }
+  }, [src])
 
   const onLoad = useCallback(() => setLoaded(true), [])
 
@@ -25,7 +32,7 @@ export default function PremiumImage({
       style={{ aspectRatio }}
       aria-busy={!loaded}
     >
-      {placeholderSrc && (
+      {placeholderSrc && !loaded && (
         <img
           src={placeholderSrc}
           alt=""
@@ -36,6 +43,7 @@ export default function PremiumImage({
       )}
       {!loaded && <div className="premium-image__shimmer" aria-hidden="true" />}
       <motion.img
+        ref={imgRef}
         src={src}
         alt={alt}
         className={`premium-image__img ${className}`}
@@ -46,11 +54,12 @@ export default function PremiumImage({
         initial={false}
         animate={{
           opacity: loaded ? 1 : 0,
-          filter: loaded ? 'blur(0px)' : 'blur(12px)',
-          scale: loaded ? 1 : 1.03,
+          filter: loaded ? 'blur(0px)' : 'blur(10px)',
+          scale: loaded ? 1 : 1.02,
         }}
         transition={springSoft}
       />
     </div>
   )
 }
+

@@ -6,12 +6,16 @@ export function useSiteAbout(defaults) {
 
   useEffect(() => {
     const fetchAbout = async () => {
-      const { data } = await supabase
-        .from('menu_items')
-        .select('*')
-        .eq('category', '__site_about__')
-        .maybeSingle()
-      setAboutData(data ?? null)
+      try {
+        const { data } = await supabase
+          .from('menu_items')
+          .select('*')
+          .eq('category', '__site_about__')
+          .maybeSingle()
+        setAboutData(data ?? null)
+      } catch (err) {
+        console.warn('Failed to fetch about from Supabase:', err)
+      }
     }
 
     const debouncedFetch = createDebouncedRefetch(fetchAbout, 350)

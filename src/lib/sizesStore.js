@@ -5,20 +5,25 @@ let cachedSizes = null
 export async function fetchSizesConfig() {
   if (cachedSizes) return cachedSizes
 
-  const { data } = await supabase
-    .from('menu_items')
-    .select('description')
-    .eq('category', '__sizes_config__')
-    .limit(1)
-    .single()
+  try {
+    const { data } = await supabase
+      .from('menu_items')
+      .select('description')
+      .eq('category', '__sizes_config__')
+      .limit(1)
+      .single()
 
-  if (data?.description) {
-    try {
-      cachedSizes = JSON.parse(data.description)
-    } catch {
+    if (data?.description) {
+      try {
+        cachedSizes = JSON.parse(data.description)
+      } catch {
+        cachedSizes = {}
+      }
+    } else {
       cachedSizes = {}
     }
-  } else {
+  } catch (err) {
+    console.warn('Failed to fetch sizes config from Supabase:', err)
     cachedSizes = {}
   }
 

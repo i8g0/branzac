@@ -9,6 +9,7 @@ import IconRenderer from './IconRenderer'
 import PremiumImage from './ui/PremiumImage'
 import { normalizeMenuItem } from '../lib/normalizeMenuItem'
 import { fetchSizesConfig, getSizesForItem, getPriceForSize } from '../lib/sizesStore'
+import { menuData, categories as fallbackCategories } from '../data/menuData'
 
 const MenuCard = memo(function MenuCard({ item, onAdd, sizesConfig }) {
   const sizes = getSizesForItem(sizesConfig, item.name)
@@ -112,30 +113,68 @@ export default function Menu() {
   useEffect(() => {
     let cancelled = false
 
+    // 1. Initial load from local cache for 0ms instant display
+    try {
+      const cachedMenu = localStorage.getItem('branzag_menu_items_cache')
+      const cachedCats = localStorage.getItem('branzag_menu_categories_cache')
+      if (cachedMenu) {
+        const parsed = JSON.parse(cachedMenu)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMenuItems(parsed)
+          setLoading(false)
+        }
+      }
+      if (cachedCats) {
+        const parsedCats = JSON.parse(cachedCats)
+        if (Array.isArray(parsedCats) && parsedCats.length > 0) {
+          setCategories(parsedCats)
+        }
+      }
+    } catch (e) {
+      console.warn('Local cache read failed:', e)
+    }
+
     const fetchData = async () => {
-      const [menuRes, catRes, sizesRes] = await Promise.all([
-        supabase.from('menu_items').select('*').order('created_at', { ascending: true }),
-        supabase.from('menu_categories').select('*').order('created_at', { ascending: true }),
-        fetchSizesConfig(),
-      ])
+      try {
+        const [menuRes, catRes, sizesRes] = await Promise.all([
+          supabase.from('menu_items').select('*').order('created_at', { ascending: true }),
+          supabase.from('menu_categories').select('*').order('created_at', { ascending: true }),
+          fetchSizesConfig(),
+        ])
 
-      if (cancelled) return
+        if (cancelled) return
 
-      if (menuRes.data) {
-        setMenuItems(
-          menuRes.data
+        if (menuRes?.data && menuRes.data.length > 0) {
+          const normalized = menuRes.data
             .filter((item) => !item.category.startsWith('__'))
             .map(normalizeMenuItem)
-        )
+          setMenuItems(normalized)
+          try { localStorage.setItem('branzag_menu_items_cache', JSON.stringify(normalized)) } catch (e) {}
+        } else if (!localStorage.getItem('branzag_menu_items_cache')) {
+          setMenuItems(menuData)
+        }
+
+        if (catRes?.data && catRes.data.length > 0) {
+          const formattedCats = [
+            { id: 'all', name: 'الكل', icon: '' },
+            ...catRes.data.map((c) => ({ id: c.name, name: c.name, icon: c.icon })),
+          ]
+          setCategories(formattedCats)
+          try { localStorage.setItem('branzag_menu_categories_cache', JSON.stringify(formattedCats)) } catch (e) {}
+        } else if (!localStorage.getItem('branzag_menu_categories_cache')) {
+          setCategories(fallbackCategories)
+        }
+
+        setSizesConfig(sizesRes || {})
+      } catch (err) {
+        console.warn('Supabase menu fetch failed, using local fallback:', err)
+        if (!cancelled) {
+          setMenuItems(menuData)
+          setCategories(fallbackCategories)
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
       }
-      if (catRes.data) {
-        setCategories([
-          { id: 'all', name: 'الكل', icon: '' },
-          ...catRes.data.map((c) => ({ id: c.name, name: c.name, icon: c.icon })),
-        ])
-      }
-      setSizesConfig(sizesRes)
-      setLoading(false)
     }
 
     const debouncedFetch = debounce(fetchData, 300)

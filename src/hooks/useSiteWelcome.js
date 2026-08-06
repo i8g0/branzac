@@ -9,14 +9,18 @@ const listeners = new Set()
 let channel = null
 
 async function fetchWelcomeFromDb() {
-  const { data } = await supabase
-    .from('menu_items')
-    .select('name')
-    .eq('category', '__site_welcome__')
-    .maybeSingle()
-  if (data?.name && data.name !== welcomeText) {
-    welcomeText = data.name
-    listeners.forEach((notify) => notify())
+  try {
+    const { data } = await supabase
+      .from('menu_items')
+      .select('name')
+      .eq('category', '__site_welcome__')
+      .maybeSingle()
+    if (data?.name && data.name !== welcomeText) {
+      welcomeText = data.name
+      listeners.forEach((notify) => notify())
+    }
+  } catch (err) {
+    console.warn('Failed to fetch welcome from Supabase:', err)
   }
 }
 

@@ -9,14 +9,18 @@ const listeners = new Set()
 let channel = null
 
 async function fetchLogoFromDb() {
-  const { data } = await supabase
-    .from('menu_items')
-    .select('image')
-    .eq('category', '__site_logo__')
-    .maybeSingle()
-  if (data?.image && data.image !== logoUrl) {
-    logoUrl = data.image
-    listeners.forEach((notify) => notify())
+  try {
+    const { data } = await supabase
+      .from('menu_items')
+      .select('image')
+      .eq('category', '__site_logo__')
+      .maybeSingle()
+    if (data?.image && data.image !== logoUrl) {
+      logoUrl = data.image
+      listeners.forEach((notify) => notify())
+    }
+  } catch (err) {
+    console.warn('Failed to fetch logo from Supabase:', err)
   }
 }
 
