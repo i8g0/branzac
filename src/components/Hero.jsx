@@ -10,12 +10,22 @@ import { sanitizeImageUrl } from '../lib/sanitize'
 
 const DEFAULT_SLIDE = {
   id: 'default',
-  image: '',
+  image: '/images/hero-bg.png',
   name: 'حيث تلتقي أصالة الشاي بالتجربة الاستثنائية',
 }
 
 export default function Hero() {
-  const [slides, setSlides] = useState([])
+  const [slides, setSlides] = useState(() => {
+    try {
+      const cached = localStorage.getItem('branzag_hero_slides_cache')
+      if (cached) {
+        const parsed = JSON.parse(cached)
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed
+      }
+    } catch (e) {}
+    return [DEFAULT_SLIDE]
+  })
+
   const globalLogo = useSiteLogo()
   const welcomeText = useSiteWelcome()
   const taglineText = useSiteTagline()
@@ -29,13 +39,20 @@ export default function Hero() {
   }, [])
 
   const fetchSlidesAndLogo = useCallback(async () => {
-    const { data } = await supabase
-      .from('menu_items')
-      .select('*')
-      .eq('category', '__hero_slide__')
-      .order('created_at', { ascending: true })
+    try {
+      const { data } = await supabase
+        .from('menu_items')
+        .select('*')
+        .eq('category', '__hero_slide__')
+        .order('created_at', { ascending: true })
 
-    if (data?.length) setSlides(data)
+      if (data?.length) {
+        setSlides(data)
+        try { localStorage.setItem('branzag_hero_slides_cache', JSON.stringify(data)) } catch (e) {}
+      }
+    } catch (e) {
+      console.warn('Hero slides fetch failed:', e)
+    }
   }, [])
 
   useEffect(() => {
@@ -112,7 +129,19 @@ export default function Hero() {
                       ? `translateY(${parallaxY}px) scale(1.04)`
                       : 'scale(1.04)',
                   }}
-                />
+                >
+                  {slide.image && (
+                    <img
+                      src={sanitizeImageUrl(slide.image)}
+                      alt=""
+                      aria-hidden="true"
+                      fetchpriority={idx === 0 ? 'high' : 'auto'}
+                      loading={idx === 0 ? 'eager' : 'lazy'}
+                      decoding="sync"
+                      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0 }}
+                    />
+                  )}
+                </div>
                 <div className="hero-overlay" />
               </div>
             )
